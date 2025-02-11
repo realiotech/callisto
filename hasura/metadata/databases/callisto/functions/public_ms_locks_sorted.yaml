@@ -1,0 +1,26 @@
+function:
+  schema: public
+  name: get_ms_locks_sorted
+  configuration:
+    exposed_as: query
+    root_field_name: ms_locks_sorted
+    arguments:
+      p_staker_addr:
+        type: text
+        nullable: true
+      p_denom:
+        type: text
+        nullable: true
+      p_val_addr:
+        type: text
+        nullable: true
+      p_limit:
+        type: integer
+        nullable: true
+      p_offset:
+        type: integer
+        nullable: true
+      p_order_direction:
+        type: text
+        nullable: true
+    returns: ms_locks

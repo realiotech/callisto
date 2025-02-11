@@ -200,11 +200,13 @@ func (m *Module) handleVoteEvent(tx *juno.Transaction, voter string, events sdk.
 		return fmt.Errorf("error while getting vote option: %s", err)
 	}
 
-	vote := types.NewVote(proposalID, voter, weightVoteOption.Option, weightVoteOption.Weight, txTimestamp, int64(tx.Height))
+	for _, weightVote := range weightVoteOption {
+		vote := types.NewVote(proposalID, voter, weightVote.Option, weightVote.Weight, txTimestamp, int64(tx.Height))
 
-	err = m.db.SaveVote(vote)
-	if err != nil {
-		return fmt.Errorf("error while saving vote: %s", err)
+		err = m.db.SaveVote(vote)
+		if err != nil {
+			return fmt.Errorf("error while saving vote: %s", err)
+		}
 	}
 
 	// update tally result for given proposal
