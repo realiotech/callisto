@@ -17,12 +17,15 @@ import (
 func (m *Module) HandleBlock(
 	block *tmctypes.ResultBlock, res *tmctypes.ResultBlockResults, _ []*juno.Transaction, _ *tmctypes.ResultValidators,
 ) error {
-
-	// Remove expired fee grant allowances
-	err := m.updateBalanceByEvent(block.Block.Height, res.FinalizeBlockEvents)
-	if err != nil {
-		fmt.Printf("Error when removing expired fee grant allowance, error: %s", err)
+	events := res.FinalizeBlockEvents
+	for _, tx := range res.TxsResults {
+		events = append(events, tx.Events...)
 	}
+	err := m.updateBalanceByEvent(block.Block.Height, events)
+	if err != nil {
+		fmt.Printf("Error when update balance by end block: %s", err)
+	}
+
 	return nil
 }
 
@@ -76,7 +79,6 @@ func (m *Module) updateBalanceByEvent(height int64, events []abci.Event) error {
 	for address := range setAddr {
 		addresses = append(addresses, address)
 	}
-
 	if len(addresses) == 0 {
 		return nil
 	}
