@@ -1,0 +1,13 @@
+FROM golang AS builder
+WORKDIR /callisto
+COPY . ./
+RUN go mod download
+RUN go build -mod=readonly -buildvcs=false -o build/callisto ./cmd/callisto
+
+FROM golang
+RUN useradd -ms /bin/bash callisto
+WORKDIR /home/callisto
+COPY --from=builder /callisto/build/callisto /usr/local/bin/callisto
+ENTRYPOINT [ "callisto" ]
+CMD [ "start" ]
+USER callisto
