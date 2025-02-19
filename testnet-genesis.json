@@ -1,17 +1,20 @@
 {
   "app_name": "realio-networkd",
-  "app_version": "1.0.2-2-gd363425",
+  "app_version": "1.0.2",
   "genesis_time": "2025-01-23T17:37:49.467749Z",
   "chain_id": "realionetwork_3300-4",
-  "initial_height": "1",
+  "initial_height": "424740",
   "app_hash": null,
   "app_state": {
-    "07-tendermint": null,
     "asset": {
       "params": {},
       "tokens": [
         {
+          "name": "Realio Security Token",
+          "symbol": "rst",
+          "total": "50000000",
           "authorizationRequired": true,
+          "manager": "realio1rj6my433u6wzzev6xvduggwvq30pfhwtsac3qa",
           "authorized": [
             {
               "address": "realio1rj6my433u6wzzev6xvduggwvq30pfhwtsac3qa",
@@ -21,11 +24,7 @@
               "address": "realio1mx3h3zue85jj0u48uv9eyr3yprkqr70d0x0egr",
               "authorized": true
             }
-          ],
-          "manager": "realio1rj6my433u6wzzev6xvduggwvq30pfhwtsac3qa",
-          "name": "Realio Security Token",
-          "symbol": "rst",
-          "total": "50000000"
+          ]
         }
       ]
     },
@@ -39,45 +38,11 @@
       },
       "accounts": [
         {
-          "@type": "/cosmos.auth.v1beta1.BaseAccount",
-          "address": "realio1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq8w4vxzu",
-          "pub_key": null,
-          "account_number": "0",
-          "sequence": "0"
-        },
-        {
-          "@type": "/cosmos.auth.v1beta1.BaseAccount",
-          "address": "realio1824jpqunx75eaeqqgvvppv3ec2gvevulf7722n",
-          "pub_key": null,
-          "account_number": "1",
-          "sequence": "0"
-        },
-        {
-          "@type": "/ethermint.types.v1.EthAccount",
-          "base_account": {
-            "address": "realio17lw344gwpm3e2ejss2xexssv9pjcy7296vl3v2",
-            "pub_key": null,
-            "account_number": "0",
-            "sequence": "0"
-          },
-          "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
-        },
-        {
-          "@type": "/ethermint.types.v1.EthAccount",
-          "base_account": {
-            "address": "realio1jhxns8c3769mgzwaw8qnrrhvfk52s3hdy2vdsl",
-            "pub_key": null,
-            "account_number": "0",
-            "sequence": "0"
-          },
-          "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
-        },
-        {
           "@type": "/ethermint.types.v1.EthAccount",
           "base_account": {
             "address": "realio1rj6my433u6wzzev6xvduggwvq30pfhwtsac3qa",
             "pub_key": null,
-            "account_number": "0",
+            "account_number": "4",
             "sequence": "0"
           },
           "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
@@ -87,18 +52,168 @@
           "base_account": {
             "address": "realio19mjtn7dz2dvvg70pzafq6cuc7mz9al6ej5g9y9",
             "pub_key": null,
-            "account_number": "0",
+            "account_number": "5",
             "sequence": "0"
           },
           "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "realio1824jpqunx75eaeqqgvvppv3ec2gvevulf7722n",
+          "pub_key": null,
+          "account_number": "1",
+          "sequence": "0"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "address": "realio1fl48vsnmsdzcv85q5d2q4z5ajdha8yu3uwd99d",
+            "pub_key": null,
+            "account_number": "10",
+            "sequence": "0"
+          },
+          "name": "bonded_tokens_pool",
+          "permissions": [
+            "burner",
+            "staking"
+          ]
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "address": "realio1tygms3xhhs3yv487phx3dw4a95jn7t7lgw35ne",
+            "pub_key": null,
+            "account_number": "11",
+            "sequence": "0"
+          },
+          "name": "not_bonded_tokens_pool",
+          "permissions": [
+            "burner",
+            "staking"
+          ]
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "realio1duhy4d9j3x5s0jv97vvwpkm2fhc032xj6tx00d",
+          "pub_key": null,
+          "account_number": "15",
+          "sequence": "0"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "address": "realio10d07y265gmmuvt4z0w9aw880jnsr700jnhh02f",
+            "pub_key": null,
+            "account_number": "12",
+            "sequence": "0"
+          },
+          "name": "gov",
+          "permissions": [
+            "burner"
+          ]
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "realio1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq8w4vxzu",
+          "pub_key": {
+            "@type": "/os.crypto.v1.ethsecp256k1.PubKey",
+            "key": "Ar0JllIA69c2U5Nm2bOODWJ0uTU5pgQ85qKlQP7sWXRV"
+          },
+          "account_number": "0",
+          "sequence": "1"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "address": "realio1jv65s3grqf6v6jl3dp4t6c9t9rk99cd8w2qk49",
+            "pub_key": null,
+            "account_number": "8",
+            "sequence": "0"
+          },
+          "name": "distribution",
+          "permissions": []
+        },
+        {
+          "@type": "/ethermint.types.v1.EthAccount",
+          "base_account": {
+            "address": "realio1jhxns8c3769mgzwaw8qnrrhvfk52s3hdy2vdsl",
+            "pub_key": {
+              "@type": "/os.crypto.v1.ethsecp256k1.PubKey",
+              "key": "A5W2agOQIICCvOWzLZB67+71guKA5Cu20ulK0vGaMoM6"
+            },
+            "account_number": "3",
+            "sequence": "1"
+          },
+          "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "realio1h5lzf3l8ua56f94lnxhrrvudapknx9735yp6v3",
+          "pub_key": {
+            "@type": "/ethermint.crypto.v1.ethsecp256k1.PubKey",
+            "key": "AopL7KVUich0Nx/YD1QgT+FdKrYddk4w8tlZmlOZdsiR"
+          },
+          "account_number": "14",
+          "sequence": "16"
         },
         {
           "@type": "/ethermint.types.v1.EthAccount",
           "base_account": {
             "address": "realio1mx3h3zue85jj0u48uv9eyr3yprkqr70d0x0egr",
             "pub_key": null,
-            "account_number": "0",
+            "account_number": "6",
             "sequence": "0"
+          },
+          "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "address": "realio1mgydlcxrwfn9kx9u6642t4l5fn5h5kydekwk47",
+            "pub_key": null,
+            "account_number": "9",
+            "sequence": "0"
+          },
+          "name": "multistaking",
+          "permissions": [
+            "minter",
+            "burner"
+          ]
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "address": "realio1m3h30wlvsf8llruxtpukdvsy0km2kum8pyrjm6",
+            "pub_key": null,
+            "account_number": "13",
+            "sequence": "0"
+          },
+          "name": "mint",
+          "permissions": [
+            "minter"
+          ]
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "address": "realio17xpfvakm2amg962yls6f84z3kell8c5lev82h8",
+            "pub_key": null,
+            "account_number": "7",
+            "sequence": "0"
+          },
+          "name": "fee_collector",
+          "permissions": []
+        },
+        {
+          "@type": "/ethermint.types.v1.EthAccount",
+          "base_account": {
+            "address": "realio17lw344gwpm3e2ejss2xexssv9pjcy7296vl3v2",
+            "pub_key": {
+              "@type": "/ethermint.crypto.v1.ethsecp256k1.PubKey",
+              "key": "A7OrNdM7cW8K6ASKUMwwrJpt7al7q0VqhnmR7kDE82XU"
+            },
+            "account_number": "2",
+            "sequence": "1"
           },
           "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
         }
@@ -145,11 +260,38 @@
           ]
         },
         {
+          "address": "realio1fl48vsnmsdzcv85q5d2q4z5ajdha8yu3uwd99d",
+          "coins": [
+            {
+              "denom": "stake",
+              "amount": "20000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "realio1duhy4d9j3x5s0jv97vvwpkm2fhc032xj6tx00d",
+          "coins": [
+            {
+              "denom": "ario",
+              "amount": "562210000000000000"
+            }
+          ]
+        },
+        {
           "address": "realio1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq8w4vxzu",
           "coins": [
             {
               "denom": "ario",
-              "amount": "7500000000000000000000000"
+              "amount": "7499990000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "realio1jv65s3grqf6v6jl3dp4t6c9t9rk99cd8w2qk49",
+          "coins": [
+            {
+              "denom": "ario",
+              "amount": "956823567702673881010423"
             }
           ]
         },
@@ -158,7 +300,16 @@
           "coins": [
             {
               "denom": "ario",
-              "amount": "150000000000000000000000"
+              "amount": "149989999999999994400000"
+            }
+          ]
+        },
+        {
+          "address": "realio1h5lzf3l8ua56f94lnxhrrvudapknx9735yp6v3",
+          "coins": [
+            {
+              "denom": "ario",
+              "amount": "9437788400160000000"
             }
           ]
         },
@@ -176,11 +327,29 @@
           ]
         },
         {
+          "address": "realio1mgydlcxrwfn9kx9u6642t4l5fn5h5kydekwk47",
+          "coins": [
+            {
+              "denom": "ario",
+              "amount": "20000000000000000000"
+            }
+          ]
+        },
+        {
+          "address": "realio17xpfvakm2amg962yls6f84z3kell8c5lev82h8",
+          "coins": [
+            {
+              "denom": "ario",
+              "amount": "2242898689435305659"
+            }
+          ]
+        },
+        {
           "address": "realio17lw344gwpm3e2ejss2xexssv9pjcy7296vl3v2",
           "coins": [
             {
               "denom": "ario",
-              "amount": "5000000000000000000000000"
+              "amount": "4999989998878000000000000"
             }
           ]
         }
@@ -188,11 +357,15 @@
       "supply": [
         {
           "denom": "ario",
-          "amount": "65150100000000000000000000"
+          "amount": "66106925809477763470716082"
         },
         {
           "denom": "arst",
           "amount": "57500000000000000000000000"
+        },
+        {
+          "denom": "stake",
+          "amount": "20000000000000000000"
         }
       ],
       "denom_metadata": [
@@ -253,14 +426,30 @@
       "ratelimit_epoch_info": {
         "start_time": "0001-01-01T00:00:00Z",
         "duration": "86400s",
-        "current_epoch_start_time": "0001-01-01T00:00:00Z",
-        "epoch_counting_started": false,
-        "current_epoch_start_height": "0"
+        "current_epoch_start_time": "1163-11-24T00:00:00Z",
+        "epoch_counting_started": true,
+        "current_epoch_start_height": "424739"
       }
     },
     "capability": {
-      "index": "1",
-      "owners": []
+      "index": "2",
+      "owners": [
+        {
+          "index": "1",
+          "index_owners": {
+            "owners": [
+              {
+                "module": "ibc",
+                "name": "ports/transfer"
+              },
+              {
+                "module": "transfer",
+                "name": "ports/transfer"
+              }
+            ]
+          }
+        }
+      ]
     },
     "crisis": {
       "constant_fee": {
@@ -276,15 +465,123 @@
         "withdraw_addr_enabled": true
       },
       "fee_pool": {
-        "community_pool": []
+        "community_pool": [
+          {
+            "denom": "ario",
+            "amount": "19136471354053477620208.460000000000000000"
+          }
+        ]
       },
       "delegator_withdraw_infos": [],
-      "previous_proposer": "",
-      "outstanding_rewards": [],
-      "validator_accumulated_commissions": [],
-      "validator_historical_rewards": [],
-      "validator_current_rewards": [],
-      "delegator_starting_infos": [],
+      "previous_proposer": "realiovalcons1sak0ee3tnqsn0359hdcxet258l6eqx9pcq2ye4",
+      "outstanding_rewards": [
+        {
+          "validator_address": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6",
+          "outstanding_rewards": [
+            {
+              "denom": "ario",
+              "amount": "563949348883633261533648.160000000000000000"
+            }
+          ]
+        },
+        {
+          "validator_address": "realiovaloper1jhxns8c3769mgzwaw8qnrrhvfk52s3hds70hpe",
+          "outstanding_rewards": [
+            {
+              "denom": "ario",
+              "amount": "373737747464987141856566.380000000000000000"
+            }
+          ]
+        }
+      ],
+      "validator_accumulated_commissions": [
+        {
+          "validator_address": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6",
+          "accumulated": {
+            "commission": [
+              {
+                "denom": "ario",
+                "amount": "56394934888363326153364.816000000000000000"
+              }
+            ]
+          }
+        },
+        {
+          "validator_address": "realiovaloper1jhxns8c3769mgzwaw8qnrrhvfk52s3hds70hpe",
+          "accumulated": {
+            "commission": [
+              {
+                "denom": "ario",
+                "amount": "37373774746498714185656.638000000000000000"
+              }
+            ]
+          }
+        }
+      ],
+      "validator_historical_rewards": [
+        {
+          "validator_address": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6",
+          "period": "1",
+          "rewards": {
+            "cumulative_reward_ratio": [],
+            "reference_count": 2
+          }
+        },
+        {
+          "validator_address": "realiovaloper1jhxns8c3769mgzwaw8qnrrhvfk52s3hds70hpe",
+          "period": "1",
+          "rewards": {
+            "cumulative_reward_ratio": [],
+            "reference_count": 2
+          }
+        }
+      ],
+      "validator_current_rewards": [
+        {
+          "validator_address": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6",
+          "rewards": {
+            "rewards": [
+              {
+                "denom": "ario",
+                "amount": "507554413995269935380283.344000000000000000"
+              }
+            ],
+            "period": "2"
+          }
+        },
+        {
+          "validator_address": "realiovaloper1jhxns8c3769mgzwaw8qnrrhvfk52s3hds70hpe",
+          "rewards": {
+            "rewards": [
+              {
+                "denom": "ario",
+                "amount": "336363972718488427670909.742000000000000000"
+              }
+            ],
+            "period": "2"
+          }
+        }
+      ],
+      "delegator_starting_infos": [
+        {
+          "delegator_address": "realio1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq8w4vxzu",
+          "validator_address": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6",
+          "starting_info": {
+            "previous_period": "1",
+            "stake": "10000000000000000000.000000000000000000",
+            "height": "0"
+          }
+        },
+        {
+          "delegator_address": "realio1jhxns8c3769mgzwaw8qnrrhvfk52s3hdy2vdsl",
+          "validator_address": "realiovaloper1jhxns8c3769mgzwaw8qnrrhvfk52s3hds70hpe",
+          "starting_info": {
+            "previous_period": "1",
+            "stake": "10000000000000000000.000000000000000000",
+            "height": "85858"
+          }
+        }
+      ],
       "validator_slash_events": []
     },
     "evidence": {
@@ -344,90 +641,21 @@
         "base_fee_change_denominator": 8,
         "elasticity_multiplier": 2,
         "enable_height": "0",
-        "base_fee": "1000000000",
+        "base_fee": "7",
         "min_gas_price": "0.000000000000000000",
         "min_gas_multiplier": "0.500000000000000000"
       },
       "block_gas": "0"
     },
     "genutil": {
-      "gen_txs": [
-        {
-          "body": {
-            "messages": [
-              {
-                "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
-                "description": {
-                  "moniker": "test",
-                  "identity": "",
-                  "website": "",
-                  "security_contact": "",
-                  "details": ""
-                },
-                "commission": {
-                  "rate": "0.100000000000000000",
-                  "max_rate": "0.200000000000000000",
-                  "max_change_rate": "0.010000000000000000"
-                },
-                "min_self_delegation": "1",
-                "delegator_address": "",
-                "validator_address": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6",
-                "pubkey": {
-                  "@type": "/cosmos.crypto.ed25519.PubKey",
-                  "key": "uUAhL00RoiPRfc53yhrkTCQ4XQh9mOwmnnUqek77QMY="
-                },
-                "value": {
-                  "denom": "ario",
-                  "amount": "10000000000000000000"
-                }
-              }
-            ],
-            "memo": "472a4b1d01db8b0c53d0ff722062c4c75fa85c82@192.168.1.86:26656",
-            "timeout_height": "0",
-            "extension_options": [],
-            "non_critical_extension_options": []
-          },
-          "auth_info": {
-            "signer_infos": [
-              {
-                "public_key": {
-                  "@type": "/os.crypto.v1.ethsecp256k1.PubKey",
-                  "key": "Ar0JllIA69c2U5Nm2bOODWJ0uTU5pgQ85qKlQP7sWXRV"
-                },
-                "mode_info": {
-                  "single": {
-                    "mode": "SIGN_MODE_DIRECT"
-                  }
-                },
-                "sequence": "0"
-              }
-            ],
-            "fee": {
-              "amount": [],
-              "gas_limit": "200000",
-              "payer": "",
-              "granter": ""
-            },
-            "tip": null
-          },
-          "signatures": [
-            "P5VZ/pBrlVv/31IsQh4/9zBmbFOccfpIjoFt8NpBvFQsy/oi9s25PtFSKKF/53hq0wlCtxC5c9lvQBFWCpTq3wA="
-          ]
-        }
-      ]
+      "gen_txs": []
     },
     "gov": {
       "starting_proposal_id": "1",
       "deposits": [],
       "votes": [],
       "proposals": [],
-      "deposit_params": {
-        "min_deposit": [
-          {
-            "denom": "ario"
-          }
-        ]
-      },
+      "deposit_params": null,
       "voting_params": null,
       "tally_params": null,
       "params": {
@@ -462,7 +690,18 @@
     },
     "ibc": {
       "client_genesis": {
-        "clients": [],
+        "clients": [
+          {
+            "client_id": "09-localhost",
+            "client_state": {
+              "@type": "/ibc.lightclients.localhost.v2.ClientState",
+              "latest_height": {
+                "revision_number": "4",
+                "revision_height": "424739"
+              }
+            }
+          }
+        ],
         "clients_consensus": [],
         "clients_metadata": [],
         "params": {
@@ -474,7 +713,30 @@
         "next_client_sequence": "0"
       },
       "connection_genesis": {
-        "connections": [],
+        "connections": [
+          {
+            "id": "connection-localhost",
+            "client_id": "09-localhost",
+            "versions": [
+              {
+                "identifier": "1",
+                "features": [
+                  "ORDER_ORDERED",
+                  "ORDER_UNORDERED"
+                ]
+              }
+            ],
+            "state": "STATE_OPEN",
+            "counterparty": {
+              "client_id": "09-localhost",
+              "connection_id": "connection-localhost",
+              "prefix": {
+                "key_prefix": "aWJj"
+              }
+            },
+            "delay_period": "0"
+          }
+        ],
         "client_connection_paths": [],
         "next_connection_sequence": "0",
         "params": {
@@ -504,7 +766,7 @@
     "mint": {
       "minter": {
         "inflation": "0.130000000000000000",
-        "annual_provisions": "0.000000000000000000"
+        "annual_provisions": "14156099936344720375396645.010000000000000000"
       },
       "params": {
         "mint_denom": "ario",
@@ -513,7 +775,30 @@
       }
     },
     "multistaking": {
-      "multi_staking_locks": [],
+      "multi_staking_locks": [
+        {
+          "lockID": {
+            "multi_staker_addr": "realio1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq8w4vxzu",
+            "val_addr": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6"
+          },
+          "locked_coin": {
+            "denom": "ario",
+            "amount": "10000000000000000000",
+            "bond_weight": "1.000000000000000000"
+          }
+        },
+        {
+          "lockID": {
+            "multi_staker_addr": "realio1jhxns8c3769mgzwaw8qnrrhvfk52s3hdy2vdsl",
+            "val_addr": "realiovaloper1jhxns8c3769mgzwaw8qnrrhvfk52s3hds70hpe"
+          },
+          "locked_coin": {
+            "denom": "ario",
+            "amount": "10000000000000000000",
+            "bond_weight": "1.000000000000000000"
+          }
+        }
+      ],
       "multi_staking_unlocks": [],
       "multi_staking_coin_info": [
         {
@@ -529,7 +814,16 @@
           "bond_weight": "1.000000000000000000"
         }
       ],
-      "validator_multi_staking_coins": [],
+      "validator_multi_staking_coins": [
+        {
+          "val_addr": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6",
+          "coin_denom": "ario"
+        },
+        {
+          "val_addr": "realiovaloper1jhxns8c3769mgzwaw8qnrrhvfk52s3hds70hpe",
+          "coin_denom": "ario"
+        }
+      ],
       "staking_genesis_state": {
         "params": {
           "unbonding_time": "86400s",
@@ -539,13 +833,96 @@
           "bond_denom": "stake",
           "min_commission_rate": "0.000000000000000000"
         },
-        "last_total_power": "0",
-        "last_validator_powers": [],
-        "validators": [],
-        "delegations": [],
+        "last_total_power": "20",
+        "last_validator_powers": [
+          {
+            "address": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6",
+            "power": "10"
+          },
+          {
+            "address": "realiovaloper1jhxns8c3769mgzwaw8qnrrhvfk52s3hds70hpe",
+            "power": "10"
+          }
+        ],
+        "validators": [
+          {
+            "operator_address": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6",
+            "consensus_pubkey": {
+              "@type": "/cosmos.crypto.ed25519.PubKey",
+              "key": "uUAhL00RoiPRfc53yhrkTCQ4XQh9mOwmnnUqek77QMY="
+            },
+            "jailed": false,
+            "status": "BOND_STATUS_BONDED",
+            "tokens": "10000000000000000000",
+            "delegator_shares": "10000000000000000000.000000000000000000",
+            "description": {
+              "moniker": "test",
+              "identity": "",
+              "website": "",
+              "security_contact": "",
+              "details": ""
+            },
+            "unbonding_height": "0",
+            "unbonding_time": "1970-01-01T00:00:00Z",
+            "commission": {
+              "commission_rates": {
+                "rate": "0.100000000000000000",
+                "max_rate": "0.200000000000000000",
+                "max_change_rate": "0.010000000000000000"
+              },
+              "update_time": "2025-01-23T17:37:49.467749Z"
+            },
+            "min_self_delegation": "1",
+            "unbonding_on_hold_ref_count": "0",
+            "unbonding_ids": []
+          },
+          {
+            "operator_address": "realiovaloper1jhxns8c3769mgzwaw8qnrrhvfk52s3hds70hpe",
+            "consensus_pubkey": {
+              "@type": "/cosmos.crypto.ed25519.PubKey",
+              "key": "MW+g5OrSA5tpebcrGhvlNCQEAJzSgh8B9dDre4zeF/M="
+            },
+            "jailed": false,
+            "status": "BOND_STATUS_BONDED",
+            "tokens": "10000000000000000000",
+            "delegator_shares": "10000000000000000000.000000000000000000",
+            "description": {
+              "moniker": "Realio RIO Testnet",
+              "identity": "",
+              "website": "https://realio.network",
+              "security_contact": "",
+              "details": ""
+            },
+            "unbonding_height": "0",
+            "unbonding_time": "1970-01-01T00:00:00Z",
+            "commission": {
+              "commission_rates": {
+                "rate": "0.100000000000000000",
+                "max_rate": "0.200000000000000000",
+                "max_change_rate": "0.010000000000000000"
+              },
+              "update_time": "2025-01-29T16:46:56.215393572Z"
+            },
+            "min_self_delegation": "1",
+            "unbonding_on_hold_ref_count": "0",
+            "unbonding_ids": []
+          }
+        ],
+        "delegations": [
+          {
+            "delegator_address": "realio1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq8w4vxzu",
+            "validator_address": "realiovaloper1jyrr9ga485mzdw6u7w7vcvcmhz8h6zq86p0un6",
+            "shares": "10000000000000000000.000000000000000000"
+          },
+          {
+            "delegator_address": "realio1jhxns8c3769mgzwaw8qnrrhvfk52s3hdy2vdsl",
+            "validator_address": "realiovaloper1jhxns8c3769mgzwaw8qnrrhvfk52s3hds70hpe",
+            "shares": "10000000000000000000.000000000000000000"
+          }
+        ],
         "unbonding_delegations": [],
         "redelegations": [],
-        "exported": false
+        "exported": true
       }
     },
     "slashing": {
@@ -556,25 +933,40 @@
         "slash_fraction_double_sign": "0.050000000000000000",
         "slash_fraction_downtime": "0.010000000000000000"
       },
-      "signing_infos": [],
-      "missed_blocks": []
-    },
-    "staking": {
-      "params": {
-        "unbonding_time": "86400s",
-        "max_validators": 100,
-        "max_entries": 7,
-        "historical_entries": 10000,
-        "bond_denom": "stake",
-        "min_commission_rate": "0.000000000000000000"
-      },
-      "last_total_power": "0",
-      "last_validator_powers": [],
-      "validators": [],
-      "delegations": [],
-      "unbonding_delegations": [],
-      "redelegations": [],
-      "exported": false
+      "signing_infos": [
+        {
+          "address": "realiovalcons1q856ayvnavkt665e8v9g5g60nfs2hygjdvdecj",
+          "validator_signing_info": {
+            "address": "realiovalcons1q856ayvnavkt665e8v9g5g60nfs2hygjdvdecj",
+            "start_height": "85858",
+            "index_offset": "338879",
+            "jailed_until": "1970-01-01T00:00:00Z",
+            "tombstoned": false,
+            "missed_blocks_counter": "0"
+          }
+        },
+        {
+          "address": "realiovalcons1sak0ee3tnqsn0359hdcxet258l6eqx9pcq2ye4",
+          "validator_signing_info": {
+            "address": "realiovalcons1sak0ee3tnqsn0359hdcxet258l6eqx9pcq2ye4",
+            "start_height": "0",
+            "index_offset": "424738",
+            "jailed_until": "1970-01-01T00:00:00Z",
+            "tombstoned": false,
+            "missed_blocks_counter": "0"
+          }
+        }
+      ],
+      "missed_blocks": [
+        {
+          "address": "realiovalcons1q856ayvnavkt665e8v9g5g60nfs2hygjdvdecj",
+          "missed_blocks": []
+        },
+        {
+          "address": "realiovalcons1sak0ee3tnqsn0359hdcxet258l6eqx9pcq2ye4",
+          "missed_blocks": []
+        }
+      ]
     },
     "transfer": {
       "port_id": "transfer",
@@ -589,6 +981,26 @@
     "vesting": {}
   },
   "consensus": {
+    "validators": [
+      {
+        "address": "876CFCE62B982137C685BB706CAD543FF59018A1",
+        "pub_key": {
+          "type": "tendermint/PubKeyEd25519",
+          "value": "uUAhL00RoiPRfc53yhrkTCQ4XQh9mOwmnnUqek77QMY="
+        },
+        "power": "10",
+        "name": "test"
+      },
+      {
+        "address": "01E9AE9193EB2CBD6A993B0A8A234F9A60AB9112",
+        "pub_key": {
+          "type": "tendermint/PubKeyEd25519",
+          "value": "MW+g5OrSA5tpebcrGhvlNCQEAJzSgh8B9dDre4zeF/M="
+        },
+        "power": "10",
+        "name": "Realio RIO Testnet"
+      }
+    ],
     "params": {
       "block": {
         "max_bytes": "22020096",
