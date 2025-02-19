@@ -1,30 +1,10 @@
 {
+  "app_name": "realio-networkd",
+  "app_version": "1.0.2-2-gd363425",
   "genesis_time": "2025-01-23T17:37:49.467749Z",
   "chain_id": "realionetwork_3300-4",
   "initial_height": "1",
-  "consensus_params": {
-    "block": {
-      "max_bytes": "22020096",
-      "max_gas": "-1"
-    },
-    "evidence": {
-      "max_age_num_blocks": "100000",
-      "max_age_duration": "172800000000000",
-      "max_bytes": "1048576"
-    },
-    "validator": {
-      "pub_key_types": [
-        "ed25519"
-      ]
-    },
-    "version": {
-      "app": "0"
-    },
-    "abci": {
-      "vote_extensions_enable_height": "0"
-    }
-  },
-  "app_hash": "",
+  "app_hash": null,
   "app_state": {
     "07-tendermint": null,
     "asset": {
@@ -607,5 +587,29 @@
     },
     "upgrade": {},
     "vesting": {}
+  },
+  "consensus": {
+    "params": {
+      "block": {
+        "max_bytes": "22020096",
+        "max_gas": "-1"
+      },
+      "evidence": {
+        "max_age_num_blocks": "100000",
+        "max_age_duration": "172800000000000",
+        "max_bytes": "1048576"
+      },
+      "validator": {
+        "pub_key_types": [
+          "ed25519"
+        ]
+      },
+      "version": {
+        "app": "0"
+      },
+      "abci": {
+        "vote_extensions_enable_height": "0"
+      }
+    }
   }
 }
