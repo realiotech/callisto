@@ -8,6 +8,7 @@ FROM golang
 RUN useradd -ms /bin/bash callisto
 WORKDIR /home/callisto
 COPY --from=builder /callisto/build/callisto /usr/local/bin/callisto
-ENTRYPOINT [ "callisto" ]
-CMD [ "start" ]
+COPY --chown=callisto:callisto testnet-genesis.json /home/callisto/.callisto/genesis.json
+COPY --chown=callisto:callisto start.sh /usr/local/bin/start
+ENTRYPOINT [ "start" ]
 USER callisto

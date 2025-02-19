@@ -5,6 +5,7 @@ vendor/
 # Configuration
 *.toml
 *.json
+!testnet-genesis.json
 config.yaml
 
 # Coverage
