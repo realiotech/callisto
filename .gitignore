@@ -6,6 +6,7 @@ vendor/
 *.toml
 *.json
 !testnet-genesis.json
+!mainnet-genesis.json
 config.yaml
 
 # Coverage
