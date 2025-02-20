@@ -1,9 +1,9 @@
-name: realio-testnet
+name: realio-mainnet
 
 on:
   push:
     branches:
-      - chains/realio-testnet
+      - chains/realio
     paths:
       - '*'
       - '**'
@@ -15,7 +15,7 @@ on:
 jobs:
   build:
     runs-on: [ubuntu-latest]
-    environment: realio-testnet
+    environment: realio-mainnet
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -43,12 +43,12 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:latest,${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
-          file: Dockerfile.testnet
+          file: Dockerfile.mainnet
           cache-from: type=gha
           cache-to: type=gha,mode=max
   update-gitops:
     needs: build
-    environment: realio-testnet
+    environment: realio-mainnet
     runs-on: [ubuntu-latest]
     steps:
     - name: Checkout gitops repository
