@@ -330,3 +330,14 @@ func (m *Module) updateValidatorStatusAndVP(height int64, validators []stakingty
 
 	return nil
 }
+
+func (m *Module) UpdateValidatorsData() error {
+	// get the latest block height from db
+	block, err := m.db.GetLastBlockHeightAndTimestamp()
+	if err != nil {
+		return fmt.Errorf("error while getting latest block height from db: %s", err)
+	}
+
+	_, err = m.updateValidators(block.Height)
+	return err
+}
