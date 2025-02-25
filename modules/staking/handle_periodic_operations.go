@@ -9,6 +9,10 @@ import (
 	"github.com/forbole/callisto/v4/modules/utils"
 )
 
+func (m *Module) RunAdditionalOperations() error {
+	return m.UpdateValidatorsData()
+}
+
 // RegisterPeriodicOperations implements modules.PeriodicOperationsModule
 func (m *Module) RegisterPeriodicOperations(scheduler *gocron.Scheduler) error {
 	log.Debug().Str("module", "staking").Msg("setting up periodic tasks")

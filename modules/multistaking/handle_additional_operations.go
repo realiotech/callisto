@@ -9,7 +9,6 @@ import (
 
 // RunAdditionalOperations implements modules.AdditionalOperationsModule
 func (m *Module) RunAdditionalOperations() error {
-
 	return m.UpdateMultiStaking()
 }
 
