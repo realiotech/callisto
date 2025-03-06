@@ -36,13 +36,12 @@ jobs:
           key: ${{ github.workflow }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ github.workflow }}-buildx-${{ github.sha }}
-            ${{ github.workflow }}-buildx-
             ${{ github.workflow }}
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
+          tags: ${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}
           file: Dockerfile.testnet
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -59,15 +58,15 @@ jobs:
         ref: main
     - name: Update manifest
       run: |
-        if cat ${{ secrets.MANIFEST_PATH }} | grep ${{ github.sha }}; then
+        if cat ${{ secrets.MANIFEST_PATH }} | grep ${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}; then
           echo "Image tag already exists in the manifest"
           exit 0
         fi
-        sed -i 's|image: .*$|image: '"${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}"'|' ${{ secrets.MANIFEST_PATH }}
+        sed -i 's|image: .*$|image: '"${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}"'|' ${{ secrets.MANIFEST_PATH }}
         git config user.name 'github-actions-bot'
         git config user.email '${{ secrets.IMAGE_REGISTRY_USER }}'
         git add .
-        git commit -m 'Update image tag to ${{ github.sha }}'
+        git commit -m 'Update image tag to ${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}'
         git push
     env:
       GITHUB_TOKEN: ${{ secrets.GITOPS_PAT }}
