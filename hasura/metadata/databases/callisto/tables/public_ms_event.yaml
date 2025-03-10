@@ -1,0 +1,15 @@
+table:
+  name: ms_event
+  schema: public
+select_permissions:
+- permission:
+    allow_aggregations: false
+    columns:
+    - height
+    - name
+    - val_addr
+    - del_addr
+    - amount
+    filter: {}
+    limit: 100
+  role: anonymous

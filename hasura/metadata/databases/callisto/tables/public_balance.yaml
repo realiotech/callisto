@@ -1,0 +1,14 @@
+table:
+  name: balance
+  schema: public
+select_permissions:
+- permission:
+    allow_aggregations: false
+    columns:
+    - address
+    - amount
+    - denom
+    - height
+    filter: {}
+    limit: 200
+  role: anonymous

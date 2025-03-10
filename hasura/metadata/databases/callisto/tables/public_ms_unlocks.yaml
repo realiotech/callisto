@@ -1,0 +1,17 @@
+table:
+  name: ms_unlocks
+  schema: public
+select_permissions:
+- permission:
+    allow_aggregations: false
+    columns:
+    - staker_addr
+    - val_addr
+    - creation_height
+    - denom
+    - amount
+    - bond_weight
+    - height
+    filter: {}
+    limit: 100
+  role: anonymous
