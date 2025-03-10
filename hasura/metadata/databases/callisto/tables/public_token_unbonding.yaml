@@ -1,0 +1,13 @@
+table:
+  name: token_unbonding
+  schema: public
+select_permissions:
+- permission:
+    allow_aggregations: false
+    columns:
+    - denom
+    - amount
+    - height
+    filter: {}
+    limit: 100
+  role: anonymous

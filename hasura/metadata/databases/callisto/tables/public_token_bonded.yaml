@@ -1,0 +1,13 @@
+table:
+  name: token_bonded
+  schema: public
+select_permissions:
+- permission:
+    allow_aggregations: false
+    columns:
+    - denom
+    - amount
+    - height
+    filter: {}
+    limit: 100
+  role: anonymous
