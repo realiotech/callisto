@@ -18,14 +18,18 @@
       fields:
         - name: amount
           type: text
-      permissions:
-      - role: anonymous
+      select_permissions:
+        - role: anonymous
+          permission:
+            columns: "*"
     - name: count
       fields:
         - name: count
           type: bigint
-      permissions:
-      - role: anonymous
+      select_permissions:
+        - role: anonymous
+          permission:
+            columns: "*"
   native_queries:
   - root_field_name: supply_by_denom
     arguments:
