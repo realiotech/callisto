@@ -18,10 +18,14 @@
       fields:
         - name: amount
           type: text
+      permissions:
+      - role: anonymous
     - name: count
       fields:
         - name: count
           type: bigint
+      permissions:
+      - role: anonymous
   native_queries:
   - root_field_name: supply_by_denom
     arguments:
@@ -33,8 +37,6 @@
       FROM supply, unnest(coins) AS coin
       WHERE (coin).denom = {{denom}}
     returns: amount
-    permissions:
-    - role: anonymous
   - root_field_name: locks_count_by_val
     arguments:
       address:
@@ -43,8 +45,6 @@
     code:
       SELECT COUNT (*) from ms_locks WHERE val_addr = {{address}}
     returns: count
-    permissions:
-    - role: anonymous
   - root_field_name: locks_count_by_del
     arguments:
       address:
@@ -53,8 +53,6 @@
     code:
       SELECT COUNT (*) from ms_locks WHERE staker_addr = {{address}}
     returns: count
-    permissions:
-    - role: anonymous
   - root_field_name: unlocks_count_by_val
     arguments:
       address:
@@ -63,8 +61,6 @@
     code:
       SELECT COUNT (*) from ms_unlocks WHERE val_addr = {{address}}
     returns: count
-    permissions:
-    - role: anonymous
   - root_field_name: unlocks_count_by_del
     arguments:
       address:
@@ -73,8 +69,6 @@
     code:
       SELECT COUNT (*) from ms_unlocks WHERE staker_addr = {{address}}
     returns: count
-    permissions:
-    - role: anonymous
   - root_field_name: locks_count_by_denom
     arguments:
       denom:
@@ -83,8 +77,6 @@
     code:
       SELECT COUNT (*) from ms_locks WHERE denom = {{denom}}
     returns: count
-    permissions:
-    - role: anonymous
   - root_field_name: unlocks_count_by_denom
     arguments:
       denom:
@@ -93,8 +85,6 @@
     code:
       SELECT COUNT (*) from ms_unlocks WHERE denom = {{denom}}
     returns: count
-    permissions:
-    - role: anonymous
   - root_field_name: balance_count
     arguments:
       denom:
@@ -103,11 +93,7 @@
     code:
       SELECT COUNT (*) from balance WHERE denom = {{denom}}
     returns: count
-    permissions:
-    - role: anonymous
   - root_field_name: txs_count
     code:
       SELECT COUNT (*) from transaction
     returns: count
-    permissions:
-    - role: anonymous
