@@ -22,6 +22,7 @@
         - role: anonymous
           permission:
             columns: "*"
+            filter: {}
     - name: count
       fields:
         - name: count
@@ -30,6 +31,7 @@
         - role: anonymous
           permission:
             columns: "*"
+            filter: {}
   native_queries:
   - root_field_name: supply_by_denom
     arguments:
