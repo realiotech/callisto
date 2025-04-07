@@ -23,7 +23,7 @@ func (db *Db) SaveEvmTx(height int64, txHash string, msg *evmtypes.MsgEthereumTx
 }
 
 func (db *Db) saveEvmTxInsidePartition(hash string, msg *evmtypes.MsgEthereumTx, partitionID int64) error {
-	query := `INSERT INTO etransactions (ehash, transaction_hash, partition_id)
+	query := `INSERT INTO etransaction (ehash, transaction_hash, partition_id)
 		VALUES ($1, $2, $3)`
 
 	_, err := db.SQL.Exec(query, msg.Hash, hash, partitionID)
