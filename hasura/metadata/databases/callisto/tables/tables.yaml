@@ -49,3 +49,6 @@
 - "!include public_ms_event.yaml"
 - "!include public_token_unbonding.yaml"
 - "!include public_token_bonded.yaml"
+- "!include public_bridge_in.yaml"
+- "!include public_bridge_out.yaml"
+- "!include public_etransaction.yaml"

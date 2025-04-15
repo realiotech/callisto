@@ -1,0 +1,14 @@
+table:
+  name: bridge_out
+  schema: public
+select_permissions:
+- permission:
+    allow_aggregations: false
+    columns:
+    - hash
+    - amount
+    - denom
+    - sender
+    filter: {}
+    limit: 100
+  role: anonymous

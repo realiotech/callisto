@@ -14,7 +14,7 @@ require (
 	github.com/cometbft/cometbft v0.38.12
 	github.com/cosmos/cosmos-sdk v0.50.11
 	github.com/cosmos/gogoproto v1.7.0
-	github.com/cosmos/ibc-go/v8 v8.5.1
+	github.com/cosmos/ibc-go/v8 v8.6.1
 	github.com/evmos/os v0.0.0-20241002122822-02a9121016ee
 	github.com/forbole/juno/v6 v6.0.1
 	github.com/go-co-op/gocron v1.37.0
@@ -25,7 +25,7 @@ require (
 	github.com/prometheus/client_golang v1.20.1
 	github.com/proullon/ramsql v0.1.3
 	github.com/realio-tech/multi-staking-module v0.0.0-00010101000000-000000000000
-	github.com/realiotech/realio-network v1.0.2
+	github.com/realiotech/realio-network v1.0.4
 	github.com/rs/zerolog v1.33.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
