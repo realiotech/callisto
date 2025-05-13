@@ -9,7 +9,7 @@ import (
 func (db *Db) SaveBridgeIn(hash string, msg *bridgetypes.MsgBridgeIn) error {
 	query := `INSERT INTO bridge_in (hash, amount, denom, receiver) VALUES ($1, $2, $3, $4) ON CONFLICT (hash) DO NOTHING`
 
-	_, err := db.SQL.Exec(query, hash, msg.Coin.Amount.String(), msg.Coin.Denom, msg.Reciever)
+	_, err := db.SQL.Exec(query, hash, msg.Coin.Amount.String(), msg.Coin.Denom, msg.Receiver)
 	if err != nil {
 		return fmt.Errorf("error while storing bridge msg: %s", err)
 	}
@@ -18,7 +18,7 @@ func (db *Db) SaveBridgeIn(hash string, msg *bridgetypes.MsgBridgeIn) error {
 }
 
 func (db *Db) SaveBridgeOut(hash string, msg *bridgetypes.MsgBridgeOut) error {
-	query := `INSERT INTO bridge_in (hash, amount, denom, sender) VALUES ($1, $2, $3, $4) ON CONFLICT (hash) DO NOTHING`
+	query := `INSERT INTO bridge_out (hash, amount, denom, sender) VALUES ($1, $2, $3, $4) ON CONFLICT (hash) DO NOTHING`
 
 	_, err := db.SQL.Exec(query, hash, msg.Coin.Amount.String(), msg.Coin.Denom, msg.Signer)
 	if err != nil {

@@ -1,0 +1,14 @@
+table:
+  name: bridge_in
+  schema: public
+select_permissions:
+- permission:
+    allow_aggregations: false
+    columns:
+    - hash
+    - amount
+    - denom
+    - receiver
+    filter: {}
+    limit: 100
+  role: anonymous

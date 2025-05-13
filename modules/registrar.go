@@ -37,6 +37,7 @@ import (
 	"github.com/forbole/callisto/v4/modules/staking"
 	"github.com/forbole/callisto/v4/modules/upgrade"
 	"github.com/forbole/callisto/v4/modules/bridge"
+	"github.com/forbole/callisto/v4/modules/evm"
 )
 
 // UniqueAddressesParser returns a wrapper around the given parser that removes all duplicated addresses
@@ -96,6 +97,7 @@ func (r *Registrar) BuildModules(ctx registrar.Context) jmodules.Modules {
 	assetModule := asset.NewModule(sources.AssetSource, r.cdc, db)
 	multistakingModule := multistaking.NewModule(sources.MultistakingSource, r.cdc, db)
 	bridgeModule := bridge.NewModule(sources.BridgeSource, r.cdc, db)
+	evmModule := evm.NewModule(r.cdc, db)
 
 	return []jmodules.Module{
 		messages.NewModule(r.parser, ctx.Database),
@@ -120,5 +122,6 @@ func (r *Registrar) BuildModules(ctx registrar.Context) jmodules.Modules {
 		assetModule,
 		multistakingModule,
 		bridgeModule,
+		evmModule,
 	}
 }
