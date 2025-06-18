@@ -3,7 +3,7 @@
   "app_version": "1.2.0",
   "genesis_time": "2025-01-23T17:37:49.467749Z",
   "chain_id": "realionetwork_3300-5",
-  "initial_height": "1619021",
+  "initial_height": 1619021,
   "app_hash": null,
   "app_state": {
     "asset": {
