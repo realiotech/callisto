@@ -14,7 +14,7 @@ on:
 
 jobs:
   build:
-    runs-on: [ubuntu-latest]
+    runs-on: [blacksmith-2vcpu-ubuntu-2404]
     environment: realio-testnet
     steps:
       - name: Checkout
@@ -41,14 +41,14 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}
+          tags: ${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}-${{ github.run_number }}
           file: Dockerfile.testnet
           cache-from: type=gha
           cache-to: type=gha,mode=max
   update-gitops:
     needs: build
     environment: realio-testnet
-    runs-on: [ubuntu-latest]
+    runs-on: [blacksmith-2vcpu-ubuntu-2404]
     steps:
     - name: Checkout gitops repository
       uses: actions/checkout@v4
@@ -58,15 +58,16 @@ jobs:
         ref: main
     - name: Update manifest
       run: |
-        if cat ${{ secrets.MANIFEST_PATH }} | grep ${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}; then
+        if cat ${{ secrets.MANIFEST_PATH }} | grep ${{ github.sha }}-${{ github.run_number }}; then
           echo "Image tag already exists in the manifest"
           exit 0
         fi
-        sed -i 's|image: .*$|image: '"${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}"'|' ${{ secrets.MANIFEST_PATH }}
+        sed -i 's|image: .*$|image: '"${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}-${{ github.run_number }}"'|' ${{ secrets.MANIFEST_PATH }}
         git config user.name 'github-actions-bot'
         git config user.email '${{ secrets.IMAGE_REGISTRY_USER }}'
         git add .
-        git commit -m 'Update image tag to ${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}'
+        git commit -m 'Update image tag to ${{ github.sha }}-${{ github.run_number }}'
+        git pull --rebase
         git push
     env:
       GITHUB_TOKEN: ${{ secrets.GITOPS_PAT }}
