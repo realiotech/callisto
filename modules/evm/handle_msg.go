@@ -9,10 +9,12 @@ import (
 	"github.com/forbole/callisto/v4/utils"
 
 	evmtypes "github.com/evmos/os/x/evm/types"
+	cosmosevmtypes "github.com/cosmos/evm/x/vm/types"
 )
 
 var msgFilter = map[string]bool{
 	"/os.evm.v1.MsgEthereumTx":  true,
+	"/cosmos.evm.vm.v1.MsgEthereumTx": true,
 }
 
 // HandleMsgExec implements modules.AuthzMessageModule
@@ -31,7 +33,10 @@ func (m *Module) HandleMsg(_ int, msg juno.Message, tx *juno.Transaction) error 
 	switch msg.GetType() {
 	case "/os.evm.v1.MsgEthereumTx":
 		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &evmtypes.MsgEthereumTx{})
-		return m.db.SaveEvmTx(int64(tx.Height), tx.TxHash, cosmosMsg)
+		return m.db.SaveEvmTx(int64(tx.Height), tx.TxHash, cosmosMsg.Hash)
+	case "/cosmos.evm.vm.v1.MsgEthereumTx":
+		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &cosmosevmtypes.MsgEthereumTx{})
+		return m.db.SaveEvmTx(int64(tx.Height), tx.TxHash, cosmosMsg.Hash)
 	}
 	return nil
 }
