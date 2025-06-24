@@ -16,7 +16,6 @@ require (
 	github.com/cosmos/evm v0.2.0
 	github.com/cosmos/gogoproto v1.7.0
 	github.com/cosmos/ibc-go/v10 v10.1.1
-	github.com/cosmos/ibc-go/v8 v8.6.1
 	github.com/evmos/os v0.0.0-20250318092432-d14323f1cec6
 	github.com/forbole/juno/v6 v6.0.1
 	github.com/go-co-op/gocron v1.37.0
@@ -120,6 +119,7 @@ require (
 	github.com/cosmos/gogogateway v1.2.0 // indirect
 	github.com/cosmos/iavl v1.2.2 // indirect
 	github.com/cosmos/ibc-go/modules/capability v1.0.1 // indirect
+	github.com/cosmos/ibc-go/v8 v8.6.1 // indirect
 	github.com/cosmos/ics23/go v0.11.0 // indirect
 	github.com/cosmos/ledger-cosmos-go v0.14.0 // indirect
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
