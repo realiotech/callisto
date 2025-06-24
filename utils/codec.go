@@ -34,7 +34,7 @@ import (
 	bridgemoduletypes "github.com/realiotech/realio-network/x/bridge/types"
 	cryptocodec "github.com/evmos/os/crypto/codec"
 	ostypes "github.com/evmos/os/types"
-	evmtypes "github.com/evmos/os/x/evm/types"
+	// evmtypes "github.com/evmos/os/x/evm/types"
 	ibcclientv10types "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
 	cosmosevmtypes "github.com/cosmos/evm/x/vm/types"
 	cosmosevmcryptocodec "github.com/cosmos/evm/crypto/codec"
@@ -49,7 +49,10 @@ func GetCodec() codec.Codec {
 		getBasicManagers().RegisterInterfaces(interfaceRegistry)
 		ostypes.RegisterInterfaces(interfaceRegistry)
 		ethcryptocodec.RegisterInterfaces(interfaceRegistry)
-		evmtypes.RegisterInterfaces(interfaceRegistry)
+		interfaceRegistry.RegisterImplementations((*sdk.Msg)(nil),
+			&MsgEthereumTx{},
+		)
+		// evmtypes.RegisterInterfaces(interfaceRegistry)
 		cryptocodec.RegisterInterfaces(interfaceRegistry)
 		cosmosevmcryptocodec.RegisterInterfaces(interfaceRegistry)
 		cosmosevmtypes.RegisterInterfaces(interfaceRegistry)
