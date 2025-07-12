@@ -36,6 +36,7 @@ import (
 
 	// evmtypes "github.com/evmos/os/x/evm/types"
 	cosmosevmcryptocodec "github.com/cosmos/evm/crypto/codec"
+	cosmosfeemarkettypes "github.com/cosmos/evm/x/feemarket/types"
 	cosmosevmtypes "github.com/cosmos/evm/x/vm/types"
 	ibcclientv10types "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
 )
@@ -54,6 +55,7 @@ func GetCodec() codec.Codec {
 		)
 		cosmosevmcryptocodec.RegisterInterfaces(interfaceRegistry)
 		cosmosevmtypes.RegisterInterfaces(interfaceRegistry)
+		cosmosfeemarkettypes.RegisterInterfaces(interfaceRegistry)
 		ibcclientv10types.RegisterInterfaces(interfaceRegistry)
 		multistakingtypes.RegisterInterfaces(interfaceRegistry)
 		bridgemoduletypes.RegisterInterfaces(interfaceRegistry)
