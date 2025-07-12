@@ -35,7 +35,9 @@ import (
 	cryptocodec "github.com/evmos/os/crypto/codec"
 	ostypes "github.com/evmos/os/types"
 	evmtypes "github.com/evmos/os/x/evm/types"
-	ibcclienttypes "github.com/cosmos/ibc-go/v8/modules/core/02-client/types"
+	cosmosevmcryptocodec "github.com/cosmos/evm/crypto/codec"
+	cosmosevmtypes "github.com/cosmos/evm/x/vm/types"
+	ibcclienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
 )
 
 var once sync.Once
@@ -47,6 +49,12 @@ func GetCodec() codec.Codec {
 		getBasicManagers().RegisterInterfaces(interfaceRegistry)
 		ostypes.RegisterInterfaces(interfaceRegistry)
 		ethcryptocodec.RegisterInterfaces(interfaceRegistry)
+		interfaceRegistry.RegisterImplementations((*sdk.Msg)(nil),
+			&MsgEthereumTx{},
+		)
+		cosmosevmcryptocodec.RegisterInterfaces(interfaceRegistry)
+		cosmosevmtypes.RegisterInterfaces(interfaceRegistry)
+		ibcclienttypes.RegisterInterfaces(interfaceRegistry)
 		evmtypes.RegisterInterfaces(interfaceRegistry)
 		cryptocodec.RegisterInterfaces(interfaceRegistry)
 		ibcclienttypes.RegisterInterfaces(interfaceRegistry)
