@@ -28,17 +28,14 @@ import (
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
-	"github.com/cosmos/gogoproto/proto"
-	ethcryptocodec "github.com/realiotech/realio-network/crypto/codec"
-	multistakingtypes "github.com/realio-tech/multi-staking-module/x/multi-staking/types"
-	bridgemoduletypes "github.com/realiotech/realio-network/x/bridge/types"
-	cryptocodec "github.com/evmos/os/crypto/codec"
-	ostypes "github.com/evmos/os/types"
-	evmtypes "github.com/evmos/os/x/evm/types"
 	cosmosevmcryptocodec "github.com/cosmos/evm/crypto/codec"
-	cosmosevmtypes "github.com/cosmos/evm/x/vm/types"
 	cosmosfeemarkettypes "github.com/cosmos/evm/x/feemarket/types"
+	cosmosevmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/cosmos/gogoproto/proto"
 	ibcclienttypes "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
+	multistakingtypes "github.com/realio-tech/multi-staking-module/x/multi-staking/types"
+	ethcryptocodec "github.com/realiotech/realio-network/crypto/codec"
+	bridgemoduletypes "github.com/realiotech/realio-network/x/bridge/types"
 )
 
 var once sync.Once
@@ -48,18 +45,18 @@ func GetCodec() codec.Codec {
 	once.Do(func() {
 		interfaceRegistry := codectypes.NewInterfaceRegistry()
 		getBasicManagers().RegisterInterfaces(interfaceRegistry)
-		ostypes.RegisterInterfaces(interfaceRegistry)
+		// ostypes.RegisterInterfaces(interfaceRegistry)
 		ethcryptocodec.RegisterInterfaces(interfaceRegistry)
 		interfaceRegistry.RegisterImplementations((*sdk.Msg)(nil),
 			&MsgEthereumTx{},
+			&MsgUpdateParams{},
 		)
 		cosmosevmcryptocodec.RegisterInterfaces(interfaceRegistry)
 		cosmosevmtypes.RegisterInterfaces(interfaceRegistry)
 		ibcclienttypes.RegisterInterfaces(interfaceRegistry)
-		evmtypes.RegisterInterfaces(interfaceRegistry)
+		// evmtypes.RegisterInterfaces(interfaceRegistry)
 		cosmosfeemarkettypes.RegisterInterfaces(interfaceRegistry)
-		cryptocodec.RegisterInterfaces(interfaceRegistry)
-		ibcclienttypes.RegisterInterfaces(interfaceRegistry)
+		// cryptocodec.RegisterInterfaces(interfaceRegistry)
 		multistakingtypes.RegisterInterfaces(interfaceRegistry)
 		bridgemoduletypes.RegisterInterfaces(interfaceRegistry)
 		std.RegisterInterfaces(interfaceRegistry)
