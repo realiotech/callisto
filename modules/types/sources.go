@@ -92,7 +92,7 @@ func buildLocalSources(cfg *local.Details, cdc codec.Codec) (*Sources, error) {
 	app := simapp.NewSimApp(cdc)
 	realioApp := realioapp.New(
 		log.NewNopLogger(), source.StoreDB, nil, true, map[int64]bool{},
-		cfg.Home, 0, realioapp.MakeEncodingConfig(), viper.New(),
+		cfg.Home, 0, realioapp.MakeEncodingConfig(), viper.New(), realioapp.EvmAppOptions,
 	)
 	sources := &Sources{
 		BankSource:         localbanksource.NewSource(source, banktypes.QueryServer(app.BankKeeper)),
