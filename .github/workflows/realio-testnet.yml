@@ -10,6 +10,15 @@ on:
       - '!.github/**'
       - '!README.md'
       - '!.gitignore'
+  pull_request:
+    branches:
+      - chains/realio-testnet
+    paths:
+      - '*'
+      - '**'
+      - '!.github/**'
+      - '!README.md'
+      - '!.gitignore'
   workflow_dispatch:
 
 jobs:
