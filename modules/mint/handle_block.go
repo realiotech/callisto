@@ -13,6 +13,10 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 )
 
+const (
+	deadAcc = "realio1qqqqqqqqqqqqqqqqqqqqqqqqqqqqph4dujhguh"
+)
+
 // HandleBlock implements BlockModule
 func (m *Module) HandleBlock(
 	block *tmctypes.ResultBlock, res *tmctypes.ResultBlockResults, _ []*juno.Transaction, _ *tmctypes.ResultValidators,
@@ -34,6 +38,7 @@ func (m *Module) updateBalanceByEvent(height int64, events []abci.Event) error {
 		Msg("updating balance by event")
 
 	setAddr := make(map[string]struct{})
+	setAddr[deadAcc] = struct{}{}
 	for _, event := range events {
 		switch event.Type {
 		case banktypes.EventTypeTransfer:
