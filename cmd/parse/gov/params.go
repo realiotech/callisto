@@ -37,7 +37,7 @@ func paramsCmd(parseConfig *parsecmdtypes.Config) *cobra.Command {
 
 			// Build expected modules of gov modules
 			distrModule := distribution.NewModule(sources.DistrSource, cdc, db)
-			mintModule := mint.NewModule(sources.MintSource, cdc, db)
+			mintModule := mint.NewModule(sources.MintSource, sources.BankSource, cdc, db)
 			slashingModule := slashing.NewModule(sources.SlashingSource, cdc, db)
 			stakingModule := staking.NewModule(sources.StakingSource, cdc, db)
 
