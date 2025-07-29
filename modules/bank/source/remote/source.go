@@ -3,6 +3,7 @@ package remote
 import (
 	"fmt"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -45,6 +46,10 @@ func (s Source) GetBalances(addresses []string, height int64) ([]types.AccountBa
 				balance,
 				height,
 			))
+		}
+		if len(balRes.Balances) == 0 {
+			emptyBal := sdk.NewCoin("ario", math.ZeroInt())
+			balances = append(balances, types.NewAccountBalance(address, emptyBal, height))
 		}
 	}
 
