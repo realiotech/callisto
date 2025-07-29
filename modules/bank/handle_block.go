@@ -35,6 +35,7 @@ func (m *Module) updateBalanceByEvent(height int64, events []abci.Event) error {
 		Msg("updating balance by event")
 
 	setAddr := make(map[string]struct{})
+	setAddr["realio1qqqqqqqqqqqqqqqqqqqqqqqqqqqqph4dujhguh"] = struct{}{}
 	for _, event := range events {
 		switch event.Type {
 		case banktypes.EventTypeTransfer:
