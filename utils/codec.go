@@ -49,9 +49,6 @@ func GetCodec() codec.Codec {
 		getBasicManagers().RegisterInterfaces(interfaceRegistry)
 		ostypes.RegisterInterfaces(interfaceRegistry)
 		ethcryptocodec.RegisterInterfaces(interfaceRegistry)
-		interfaceRegistry.RegisterImplementations((*sdk.Msg)(nil),
-			&MsgEthereumTx{},
-		)
 		cosmosevmcryptocodec.RegisterInterfaces(interfaceRegistry)
 		cosmosevmtypes.RegisterInterfaces(interfaceRegistry)
 		ibcclientv10types.RegisterInterfaces(interfaceRegistry)

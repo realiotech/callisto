@@ -10,6 +10,7 @@ import (
 
 	// evmtypes "github.com/evmos/os/x/evm/types"
 	cosmosevmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/realiotech/realio-network/crypto/legacytx"
 )
 
 var msgFilter = map[string]bool{
@@ -32,7 +33,7 @@ func (m *Module) HandleMsg(_ int, msg juno.Message, tx *juno.Transaction) error 
 
 	switch msg.GetType() {
 	case "/os.evm.v1.MsgEthereumTx":
-		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &utils.MsgEthereumTx{})
+		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &legacytx.MsgEthereumTx{})
 		return m.db.SaveEvmTx(int64(tx.Height), tx.TxHash, cosmosMsg.Hash)
 	case "/cosmos.evm.vm.v1.MsgEthereumTx":
 		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &cosmosevmtypes.MsgEthereumTx{})

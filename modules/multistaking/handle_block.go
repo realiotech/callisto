@@ -19,8 +19,12 @@ import (
 func (m *Module) HandleBlock(
 	block *tmctypes.ResultBlock, res *tmctypes.ResultBlockResults, _ []*juno.Transaction, _ *tmctypes.ResultValidators,
 ) error {
+	events := res.FinalizeBlockEvents
+	for _, tx := range res.TxsResults {
+		events = append(events, tx.Events...)
+	}
 
-	err := m.updateTxsByEvent(block.Block.Height, res.FinalizeBlockEvents)
+	err := m.updateTxsByEvent(block.Block.Height, events)
 	if err != nil {
 		fmt.Printf("Error when updateTxsByEvent, error: %s", err)
 	}
@@ -43,6 +47,7 @@ func (m *Module) updateTxsByEvent(height int64, events []abci.Event) error {
 			if err == nil {
 				msEvents = append(msEvents, msEvent)
 			}
+			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr.Value)
 
 		case stakingtypes.EventTypeUnbond:
 			valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
@@ -53,6 +58,7 @@ func (m *Module) updateTxsByEvent(height int64, events []abci.Event) error {
 			if err == nil {
 				msEvents = append(msEvents, msEvent)
 			}
+			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr.Value)
 
 		case stakingtypes.EventTypeCancelUnbondingDelegation:
 			valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
@@ -63,6 +69,8 @@ func (m *Module) updateTxsByEvent(height int64, events []abci.Event) error {
 			if err == nil {
 				msEvents = append(msEvents, msEvent)
 			}
+			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr.Value)
+
 		case stakingtypes.EventTypeCompleteRedelegation:
 			valAddr1, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeySrcValidator)
 			valAddr2, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDstValidator)
