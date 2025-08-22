@@ -8,8 +8,10 @@ import (
 
 	juno "github.com/forbole/juno/v6/types"
 
+	abci "github.com/cometbft/cometbft/abci/types"
 	tmctypes "github.com/cometbft/cometbft/rpc/core/types"
 	tmtypes "github.com/cometbft/cometbft/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/rs/zerolog/log"
 )
 
@@ -17,8 +19,19 @@ import (
 func (m *Module) HandleBlock(
 	block *tmctypes.ResultBlock, res *tmctypes.ResultBlockResults, _ []*juno.Transaction, vals *tmctypes.ResultValidators,
 ) error {
+
+	// Handle case create val by precompile
+	events := res.FinalizeBlockEvents
+	for _, tx := range res.TxsResults {
+		events = append(events, tx.Events...)
+	}
+	err := m.updateValsByEvent(block.Block.Height, events)
+	if err != nil {
+		fmt.Printf("Error when updateValsByEvent, error: %s", err)
+	}
+
 	// Update the validators
-	_, err := m.updateValidators(block.Block.Height)
+	_, err = m.updateValidators(block.Block.Height)
 	if err != nil {
 		return fmt.Errorf("error while updating validators: %s", err)
 	}
@@ -26,6 +39,16 @@ func (m *Module) HandleBlock(
 	// Updated the double sign evidences
 	go m.updateDoubleSignEvidence(block.Block.Height, block.Block.Evidence.Evidence)
 
+	return nil
+}
+
+func (m *Module) updateValsByEvent(height int64, events []abci.Event) error {
+	for _, event := range events {
+		switch event.Type {
+		case stakingtypes.EventTypeCreateValidator:
+			m.RefreshAllValidatorInfos(height)
+		}
+	}
 	return nil
 }
 

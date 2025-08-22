@@ -38,6 +38,12 @@ func (m *Module) updateTxsByEvent(height int64, events []abci.Event) error {
 	var msEvents []dbtypes.MSEvent
 	for _, event := range events {
 		switch event.Type {
+		case stakingtypes.EventTypeCreateValidator:
+			valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
+			valAcc, _ := sdk.ValAddressFromBech32(valAddr.Value)
+			delAddr := sdk.AccAddress(valAcc)
+			m.UpdateLockAndUnlockInfo(height, delAddr.String(), valAddr.Value)
+
 		case stakingtypes.EventTypeDelegate:
 			valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
 			delAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
