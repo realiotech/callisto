@@ -84,6 +84,13 @@ func (m *Module) updateTxsByEvent(height int64, events []abci.Event) error {
 			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr1.Value)
 			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr2.Value)
 
+		case stakingtypes.EventTypeRedelegate:
+			valAddr1, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeySrcValidator)
+			valAddr2, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDstValidator)
+			delAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
+			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr1.Value)
+			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr2.Value)
+
 		case stakingtypes.EventTypeCompleteUnbonding:
 			valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
 			delAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
