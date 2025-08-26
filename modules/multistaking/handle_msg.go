@@ -209,6 +209,6 @@ func (m *Module) UpdateUnlockToken(height int64, stakerAddr string, valAddr stri
 			}
 		}
 	}
-
-	return m.db.SaveUnbondingToken2(height, total)
+	m.db.SaveUnbondingToken2(height, total)
+	return m.db.SaveUnbondingToken(height, []*multistakingtypes.MultiStakingUnlock{unlock})
 }
