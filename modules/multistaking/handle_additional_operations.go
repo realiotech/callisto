@@ -70,6 +70,13 @@ func (m *Module) UpdateMultiStakingUnlocks(height int64) error {
 		return err
 	}
 
+	multiStakingLocks, err := m.source.GetMultiStakingLocks(height)
+	if err != nil {
+		return err
+	}
+
+	m.db.SaveBondedToken(height, multiStakingLocks)
+
 	return m.db.SaveMultiStakingUnlocks(height, multiStakingUnlocks)
 }
 
