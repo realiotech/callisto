@@ -9,11 +9,17 @@ import (
 )
 
 func (m *Module) CompleteUnbonding(height int64, stakerAddr string, valAddr string) error {
-	m.db.DropMultiStakingUnlock(stakerAddr, valAddr)
 	msunlock, err := m.source.GetMultiStakingUnlock(height, stakerAddr, valAddr)
 	if err != nil {
 		return err
 	}
+
+	err = m.UpdateUnlockToken(height, stakerAddr, valAddr, msunlock)
+	if err != nil {
+		return err
+	}
+
+	m.db.DropMultiStakingUnlock(stakerAddr, valAddr)
 
 	if msunlock != nil {
 		err = m.db.SaveMultiStakingUnlock(height, msunlock)
@@ -22,7 +28,7 @@ func (m *Module) CompleteUnbonding(height int64, stakerAddr string, valAddr stri
 		}
 	}
 
-	return m.UpdateUnlockToken(height, stakerAddr, valAddr, msunlock)
+	return nil
 }
 
 func (m *Module) convertValidatorInfo(info *multistakingtypes.ValidatorInfo) (types.MSValidatorInfo, error) {
