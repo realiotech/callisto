@@ -74,16 +74,27 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 		return err
 	}
 
+	msunlock, err := m.source.GetMultiStakingUnlock(height, stakerAddr, valAddr)
+	if err != nil {
+		return err
+	}
+
+	err = m.UpdateLockToken(height, stakerAddr, valAddr, mslock)
+	if err != nil {
+		return err
+	}
+
+	err = m.UpdateUnlockToken(height, stakerAddr, valAddr, msunlock)
+	if err != nil {
+		return err
+	}
+
+	// Now save the new lock/unlock data
 	if mslock != nil {
 		err = m.db.SaveMultiStakingLock(height, mslock)
 		if err != nil {
 			return err
 		}
-	}
-
-	msunlock, err := m.source.GetMultiStakingUnlock(height, stakerAddr, valAddr)
-	if err != nil {
-		return err
 	}
 
 	if msunlock != nil {
@@ -93,12 +104,7 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 		}
 	}
 
-	err = m.UpdateLockToken(height, stakerAddr, valAddr, mslock)
-	if err != nil {
-		return err
-	}
-
-	return m.UpdateUnlockToken(height, stakerAddr, valAddr, msunlock)
+	return nil
 }
 
 func (m *Module) UpdateLockToken(height int64, stakerAddr string, valAddr string, lock *multistakingtypes.MultiStakingLock) error {
@@ -128,6 +134,7 @@ func (m *Module) UpdateLockToken(height int64, stakerAddr string, valAddr string
 		total[denom] = amount
 	}
 
+	// Subtract old lock amounts from totals
 	for _, lockRow := range lockRows {
 		denom := lockRow.Denom
 		amount, ok := cosmossdk_io_math.NewIntFromString(lockRow.Amount)
@@ -145,19 +152,23 @@ func (m *Module) UpdateLockToken(height int64, stakerAddr string, valAddr string
 		}
 	}
 
-	denom := lock.LockedCoin.Denom
-	value, exists := total[denom]
-	if !exists {
-		total[denom] = lock.LockedCoin.Amount
-	} else {
-		total[denom] = value.Add(lock.LockedCoin.Amount)
+	// Add new lock amount to totals (if lock exists)
+	if lock != nil {
+		denom := lock.LockedCoin.Denom
+		value, exists := total[denom]
+		if !exists {
+			total[denom] = lock.LockedCoin.Amount
+		} else {
+			total[denom] = value.Add(lock.LockedCoin.Amount)
+		}
 	}
+
 	return m.db.SaveBondedToken2(height, total)
 }
 
 func (m *Module) UpdateUnlockToken(height int64, stakerAddr string, valAddr string, unlock *multistakingtypes.MultiStakingUnlock) error {
-	log.Trace().Str("module", "multistaking").Str("operation", "lock info").
-		Msg("updating lock and unlock info")
+	log.Trace().Str("module", "multistaking").Str("operation", "unlock info").
+		Msg("updating unlock token totals")
 
 	var unlockRows []dbtypes.UnlockRow
 	err := m.db.SQL.Select(&unlockRows, `SELECT * FROM ms_unlocks WHERE staker_addr = $1 AND val_addr = $2`, stakerAddr, valAddr)
@@ -182,6 +193,7 @@ func (m *Module) UpdateUnlockToken(height int64, stakerAddr string, valAddr stri
 		total[denom] = amount
 	}
 
+	// Subtract old unlock amounts from totals
 	for _, row := range unlockRows {
 		denom := row.Denom
 		amount, ok := cosmossdk_io_math.NewIntFromString(row.Amount)
@@ -197,6 +209,8 @@ func (m *Module) UpdateUnlockToken(height int64, stakerAddr string, valAddr stri
 			total[denom] = value.Add(amount)
 		}
 	}
+
+	// Add new unlock amounts to totals (if unlock exists)
 	if unlock != nil {
 		for _, entry := range unlock.Entries {
 			denom := entry.UnlockingCoin.Denom
