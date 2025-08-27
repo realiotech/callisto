@@ -74,6 +74,11 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 		return err
 	}
 
+	err = m.UpdateLockToken(height, stakerAddr, valAddr, mslock)
+	if err != nil {
+		return err
+	}
+
 	if mslock != nil {
 		err = m.db.SaveMultiStakingLock(height, mslock)
 		if err != nil {
@@ -86,6 +91,11 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 		return err
 	}
 
+	err = m.UpdateUnlockToken(height, stakerAddr, valAddr, msunlock)
+	if err != nil {
+		return err
+	}
+
 	if msunlock != nil {
 		err = m.db.SaveMultiStakingUnlock(height, msunlock)
 		if err != nil {
@@ -93,12 +103,7 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 		}
 	}
 
-	err = m.UpdateLockToken(height, stakerAddr, valAddr, mslock)
-	if err != nil {
-		return err
-	}
-
-	return m.UpdateUnlockToken(height, stakerAddr, valAddr, msunlock)
+	return nil
 }
 
 func (m *Module) UpdateLockToken(height int64, stakerAddr string, valAddr string, lock *multistakingtypes.MultiStakingLock) error {
@@ -209,6 +214,5 @@ func (m *Module) UpdateUnlockToken(height int64, stakerAddr string, valAddr stri
 			}
 		}
 	}
-
 	return m.db.SaveUnbondingToken2(height, total)
 }
