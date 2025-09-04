@@ -150,13 +150,16 @@ func (m *Module) UpdateLockToken(height int64, stakerAddr string, valAddr string
 		}
 	}
 
-	denom := lock.LockedCoin.Denom
-	value, exists := total[denom]
-	if !exists {
-		total[denom] = lock.LockedCoin.Amount
-	} else {
-		total[denom] = value.Add(lock.LockedCoin.Amount)
+	if lock != nil {
+		denom := lock.LockedCoin.Denom
+		value, exists := total[denom]
+		if !exists {
+			total[denom] = lock.LockedCoin.Amount
+		} else {
+			total[denom] = value.Add(lock.LockedCoin.Amount)
+		}
 	}
+
 	return m.db.SaveBondedToken2(height, total)
 }
 
