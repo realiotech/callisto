@@ -74,16 +74,29 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 		return err
 	}
 
+	msunlock, err := m.source.GetMultiStakingUnlock(height, stakerAddr, valAddr)
+	if err != nil {
+		return err
+	}
+
+	// Update token totals BEFORE saving the new lock/unlock data
+	// This ensures we read the old data from the database before it's overwritten
+	err = m.UpdateLockToken(height, stakerAddr, valAddr, mslock)
+	if err != nil {
+		return err
+	}
+
+	err = m.UpdateUnlockToken(height, stakerAddr, valAddr, msunlock)
+	if err != nil {
+		return err
+	}
+
+	// Now save the new lock/unlock data
 	if mslock != nil {
 		err = m.db.SaveMultiStakingLock(height, mslock)
 		if err != nil {
 			return err
 		}
-	}
-
-	msunlock, err := m.source.GetMultiStakingUnlock(height, stakerAddr, valAddr)
-	if err != nil {
-		return err
 	}
 
 	if msunlock != nil {
@@ -93,12 +106,7 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 		}
 	}
 
-	err = m.UpdateLockToken(height, stakerAddr, valAddr, mslock)
-	if err != nil {
-		return err
-	}
-
-	return m.UpdateUnlockToken(height, stakerAddr, valAddr, msunlock)
+	return nil
 }
 
 func (m *Module) UpdateLockToken(height int64, stakerAddr string, valAddr string, lock *multistakingtypes.MultiStakingLock) error {
@@ -145,13 +153,17 @@ func (m *Module) UpdateLockToken(height int64, stakerAddr string, valAddr string
 		}
 	}
 
-	denom := lock.LockedCoin.Denom
-	value, exists := total[denom]
-	if !exists {
-		total[denom] = lock.LockedCoin.Amount
-	} else {
-		total[denom] = value.Add(lock.LockedCoin.Amount)
+	// Add new lock amount to totals (if lock exists)
+	if lock != nil {
+		denom := lock.LockedCoin.Denom
+		value, exists := total[denom]
+		if !exists {
+			total[denom] = lock.LockedCoin.Amount
+		} else {
+			total[denom] = value.Add(lock.LockedCoin.Amount)
+		}
 	}
+
 	return m.db.SaveBondedToken2(height, total)
 }
 
