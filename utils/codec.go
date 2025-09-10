@@ -36,6 +36,7 @@ import (
 	multistakingtypes "github.com/realio-tech/multi-staking-module/x/multi-staking/types"
 	ethcryptocodec "github.com/realiotech/realio-network/crypto/codec"
 	bridgemoduletypes "github.com/realiotech/realio-network/x/bridge/types"
+	assetmoduletypes "github.com/realiotech/realio-network/x/asset/types"
 )
 
 var once sync.Once
@@ -59,6 +60,7 @@ func GetCodec() codec.Codec {
 		// cryptocodec.RegisterInterfaces(interfaceRegistry)
 		multistakingtypes.RegisterInterfaces(interfaceRegistry)
 		bridgemoduletypes.RegisterInterfaces(interfaceRegistry)
+		assetmoduletypes.RegisterInterfaces(interfaceRegistry)
 		std.RegisterInterfaces(interfaceRegistry)
 		cdc = codec.NewProtoCodec(interfaceRegistry)
 	})
