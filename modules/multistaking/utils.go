@@ -14,18 +14,12 @@ func (m *Module) CompleteUnbonding(height int64, stakerAddr string, valAddr stri
 		return err
 	}
 
-	// Update token totals BEFORE dropping and saving the new unlock data
-	// This ensures we read the old data from the database before it's modified
 	err = m.UpdateUnlockToken(height, stakerAddr, valAddr, msunlock)
 	if err != nil {
 		return err
 	}
 
-	// Now drop the old unlock data and save the new data
-	err = m.db.DropMultiStakingUnlock(stakerAddr, valAddr)
-	if err != nil {
-		return err
-	}
+	m.db.DropMultiStakingUnlock(stakerAddr, valAddr)
 
 	if msunlock != nil {
 		err = m.db.SaveMultiStakingUnlock(height, msunlock)

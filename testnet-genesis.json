@@ -1,30 +1,10 @@
 {
-  "genesis_time": "2025-01-23T17:37:49.467749Z",
-  "chain_id": "realionetwork_3300-4",
+  "app_name": "realio-networkd",
+  "app_version": "1.3.0",
+  "genesis_time": "2025-07-07T17:00:49.467749Z",
+  "chain_id": "realionetwork_3300-6",
   "initial_height": "1",
-  "consensus_params": {
-    "block": {
-      "max_bytes": "22020096",
-      "max_gas": "-1"
-    },
-    "evidence": {
-      "max_age_num_blocks": "100000",
-      "max_age_duration": "172800000000000",
-      "max_bytes": "1048576"
-    },
-    "validator": {
-      "pub_key_types": [
-        "ed25519"
-      ]
-    },
-    "version": {
-      "app": "0"
-    },
-    "abci": {
-      "vote_extensions_enable_height": "0"
-    }
-  },
-  "app_hash": "",
+  "app_hash": null,
   "app_state": {
     "07-tendermint": null,
     "asset": {
@@ -121,6 +101,29 @@
             "sequence": "0"
           },
           "code_hash": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "address": "realio10d07y265gmmuvt4z0w9aw880jnsr700jnhh02f",
+            "pub_key": null,
+            "account_number": "0",
+            "sequence": "0"
+          },
+          "name": "gov",
+          "permissions": [
+            "burner"
+          ]
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "address": "realio1n36uf34zhrrhkynk8p3jqkmtx769q3menz0dr0",
+          "pub_key": {
+            "@type": "/os.crypto.v1.ethsecp256k1.PubKey",
+            "key": "ArxrMFgaFUA7m2ibUsIZ7Hz1sLyUBnSKhSkkZDPe5PjX"
+          },
+          "account_number": "0",
+          "sequence": "0"
         }
       ]
     },
@@ -267,7 +270,7 @@
     },
     "bridge": {
       "params": {
-        "authority": ""
+        "authority": "realio1n36uf34zhrrhkynk8p3jqkmtx769q3menz0dr0"
       },
       "registered_coins": [],
       "ratelimit_epoch_info": {
@@ -315,7 +318,7 @@
       "params": {
         "evm_denom": "ario",
         "extra_eips": [
-          "ethereum_3855"
+          "3855"
         ],
         "chain_config": {
           "homestead_block": "0",
@@ -342,10 +345,8 @@
         "evm_channels": [],
         "access_control": {
           "create": {
-            "access_type": "ACCESS_TYPE_PERMISSIONED",
-            "access_control_list": [
-              "0x87CD17D67722A72312bd4a47cE4070a10F5cce79"
-            ]
+            "access_type": "ACCESS_TYPE_PERMISSIONLESS",
+            "access_control_list": []
           },
           "call": {
             "access_type": "ACCESS_TYPE_PERMISSIONLESS",
@@ -378,15 +379,15 @@
               {
                 "@type": "/cosmos.staking.v1beta1.MsgCreateValidator",
                 "description": {
-                  "moniker": "test",
-                  "identity": "",
-                  "website": "",
+                  "moniker": "Decentrio",
+                  "identity": "66B724BE21C8CA3D",
+                  "website": "https://decentrio.ventures",
                   "security_contact": "",
                   "details": ""
                 },
                 "commission": {
-                  "rate": "0.100000000000000000",
-                  "max_rate": "0.200000000000000000",
+                  "rate": "0.050000000000000000",
+                  "max_rate": "1.000000000000000000",
                   "max_change_rate": "0.010000000000000000"
                 },
                 "min_self_delegation": "1",
@@ -402,7 +403,7 @@
                 }
               }
             ],
-            "memo": "472a4b1d01db8b0c53d0ff722062c4c75fa85c82@192.168.1.86:26656",
+            "memo": "e4523d83bab6c91664c16ac3c9e5c4100f0719c8@65.109.92.163:26656",
             "timeout_height": "0",
             "extension_options": [],
             "non_critical_extension_options": []
@@ -431,7 +432,7 @@
             "tip": null
           },
           "signatures": [
-            "P5VZ/pBrlVv/31IsQh4/9zBmbFOccfpIjoFt8NpBvFQsy/oi9s25PtFSKKF/53hq0wlCtxC5c9lvQBFWCpTq3wA="
+            "c8hHsCXF9bgoTDParBPzOPnTdEg1PUMChwyaYLrQl8FksTiF0x49KSWz1fNgqaI0wkIwDrTlGgUOxfjz4wRukAE="
           ]
         }
       ]
@@ -465,7 +466,7 @@
         "min_initial_deposit_ratio": "0.000000000000000000",
         "proposal_cancel_ratio": "0.500000000000000000",
         "proposal_cancel_dest": "",
-        "expedited_voting_period": "86400s",
+        "expedited_voting_period": "43200s",
         "expedited_threshold": "0.667000000000000000",
         "expedited_min_deposit": [
           {
@@ -509,16 +510,17 @@
         "send_sequences": [],
         "recv_sequences": [],
         "ack_sequences": [],
-        "next_channel_sequence": "0",
-        "params": {
-          "upgrade_timeout": {
-            "height": {
-              "revision_number": "0",
-              "revision_height": "0"
-            },
-            "timestamp": "600000000000"
-          }
-        }
+        "next_channel_sequence": "0"
+      },
+      "client_v2_genesis": {
+        "counterparty_infos": []
+      },
+      "channel_v2_genesis": {
+        "acknowledgements": [],
+        "commitments": [],
+        "receipts": [],
+        "async_packets": [],
+        "send_sequences": []
       }
     },
     "mint": {
@@ -598,7 +600,6 @@
     },
     "transfer": {
       "port_id": "transfer",
-      "denom_traces": [],
       "params": {
         "send_enabled": true,
         "receive_enabled": true
@@ -607,5 +608,29 @@
     },
     "upgrade": {},
     "vesting": {}
+  },
+  "consensus": {
+    "params": {
+      "block": {
+        "max_bytes": "22020096",
+        "max_gas": "-1"
+      },
+      "evidence": {
+        "max_age_num_blocks": "100000",
+        "max_age_duration": "172800000000000",
+        "max_bytes": "1048576"
+      },
+      "validator": {
+        "pub_key_types": [
+          "ed25519"
+        ]
+      },
+      "version": {
+        "app": "0"
+      },
+      "abci": {
+        "vote_extensions_enable_height": "0"
+      }
+    }
   }
 }
