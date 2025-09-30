@@ -1242,10 +1242,10 @@ github.com/rakyll/statik v0.1.7/go.mod h1:AlZONWzMtEnMs7W4e/1LURLiI49pIMmp6V9Ung
 github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 h1:N/ElC8H3+5XpJzTSTfLsJV/mx9Q9g7kxmchpfZyxgzM=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
-github.com/realiotech/multi-staking v1.1.0-rc1 h1:fv/NiVyTbr+umXq0Mi+8UvqdY33xQCiygjxd5KpvIes=
-github.com/realiotech/multi-staking v1.1.0-rc1/go.mod h1:jNjSslDy7t9OozYsFShqRmjPrKCQV6Do4VhXRKYmh2A=
-github.com/realiotech/realio-network v1.4.0-rc1 h1:2BClxVHjdB+BBIaAAJmbLx42uBiY0wXtjg+JQ++tPKc=
-github.com/realiotech/realio-network v1.4.0-rc1/go.mod h1:2a+QlWRs5fKbjCJrmhgu7n7kETKVV4W6wxMuQFVrUa4=
+github.com/realiotech/multi-staking v1.1.0 h1:sr98X2oSUoV4KRP31pAIp+8F0xLSxv1i4/XyXvA75iw=
+github.com/realiotech/multi-staking v1.1.0/go.mod h1:jNjSslDy7t9OozYsFShqRmjPrKCQV6Do4VhXRKYmh2A=
+github.com/realiotech/realio-network v1.4.0 h1:9l91Cn6z7lYp4coi9n9DdeYMQizcG1bHsq715z0AVkI=
+github.com/realiotech/realio-network v1.4.0/go.mod h1:f3sKM9uzW7ogviGiR5QFe1llcB5BVQdxUx+XIWqj33M=
 github.com/regen-network/protobuf v1.3.3-alpha.regen.1 h1:OHEc+q5iIAXpqiqFKeLpu5NwTIkVXUs48vFMwzqpqY4=
 github.com/regen-network/protobuf v1.3.3-alpha.regen.1/go.mod h1:2DjTFR1HhMQhiWC5sZ4OhQ3+NtdbZ6oBDKQwq5Ou+FI=
 github.com/rivo/uniseg v0.2.0 h1:S1pD9weZBuJdFmowNwbpi7BJ8TNftyUImj/0WQi72jY=
