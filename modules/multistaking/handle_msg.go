@@ -4,22 +4,30 @@ import (
 	"fmt"
 
 	cosmossdk_io_math "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/rs/zerolog/log"
 
 	juno "github.com/forbole/juno/v6/types"
 
+	abci "github.com/cometbft/cometbft/abci/types"
 	dbtypes "github.com/forbole/callisto/v4/database/types"
 	"github.com/forbole/callisto/v4/utils"
 	multistakingtypes "github.com/realio-tech/multi-staking-module/x/multi-staking/types"
 )
 
 var msgFilter = map[string]bool{
-	"/cosmos.staking.v1beta1.MsgCreateValidator": true,
-	"/cosmos.staking.v1beta1.MsgEditValidator":   true,
-	"/cosmos.staking.v1beta1.MsgDelegate":        true,
-	"/cosmos.staking.v1beta1.MsgUndelegate":      true,
-	"/cosmos.staking.v1beta1.MsgBeginRedelegate": true,
+	"/cosmos.staking.v1beta1.MsgCreateValidator":    true,
+	"/cosmos.staking.v1beta1.MsgEditValidator":      true,
+	"/cosmos.staking.v1beta1.MsgDelegate":           true,
+	"/cosmos.staking.v1beta1.MsgUndelegate":         true,
+	"/cosmos.staking.v1beta1.MsgBeginRedelegate":    true,
+	"/cosmos.evm.vm.v1.MsgEthereumTx":               true,
+	"/multistaking.v1.MsgDelegateEVM":               true,
+	"/multistaking.v1.MsgUndelegateEVM":             true,
+	"/multistaking.v1.CancelUnbondingEVMDelegation": true,
+	"/multistaking.v1.MsgCreateEVMValidator":        true,
+	"/multistaking.v1.MsgBeginRedelegateEVM":        true,
 }
 
 // HandleMsgExec implements modules.AuthzMessageModule
@@ -39,9 +47,15 @@ func (m *Module) HandleMsg(_ int, msg juno.Message, tx *juno.Transaction) error 
 	case "/cosmos.staking.v1beta1.MsgCreateValidator":
 		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &stakingtypes.MsgCreateValidator{})
 		return m.UpdateLockAndUnlockInfo(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorAddress)
+	case "/multistaking.v1.MsgCreateEVMValidator":
+		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &multistakingtypes.MsgCreateEVMValidator{})
+		return m.UpdateLockAndUnlockInfo(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorAddress)
 
 	case "/cosmos.staking.v1beta1.MsgDelegate":
 		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &stakingtypes.MsgDelegate{})
+		return m.UpdateLockAndUnlockInfo(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorAddress)
+	case "/multistaking.v1.MsgDelegateEVM":
+		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &multistakingtypes.MsgDelegateEVM{})
 		return m.UpdateLockAndUnlockInfo(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorAddress)
 
 	case "/cosmos.staking.v1beta1.MsgBeginRedelegate":
@@ -52,14 +66,81 @@ func (m *Module) HandleMsg(_ int, msg juno.Message, tx *juno.Transaction) error 
 		}
 
 		return m.UpdateLockAndUnlockInfo(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorSrcAddress)
+	case "/multistaking.v1.MsgBeginRedelegateEVM":
+		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &multistakingtypes.MsgBeginRedelegateEVM{})
+		err := m.UpdateLockAndUnlockInfo(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorDstAddress)
+		if err != nil {
+			return err
+		}
+
+		return m.UpdateLockAndUnlockInfo(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorSrcAddress)
 
 	case "/cosmos.staking.v1beta1.MsgUndelegate":
 		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &stakingtypes.MsgUndelegate{})
 		return m.UpdateLockAndUnlockInfo(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorAddress)
+	case "/multistaking.v1.MsgUndelegateEVM":
+		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &multistakingtypes.MsgUndelegateEVM{})
+		return m.UpdateLockAndUnlockInfo(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorAddress)
 
 	case "/cosmos.staking.v1beta1.MsgCancelUnbondingDelegation":
 		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &stakingtypes.MsgCancelUnbondingDelegation{})
-		return m.UpdateLockAndUnlockInfo(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorAddress)
+		return m.CompleteUnbonding(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorAddress)
+	case "/multistaking.v1.CancelUnbondingEVMDelegation":
+		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &multistakingtypes.MsgCancelUnbondingEVMDelegation{})
+		return m.CompleteUnbonding(int64(tx.Height), cosmosMsg.DelegatorAddress, cosmosMsg.ValidatorAddress)
+
+	case "/cosmos.evm.vm.v1.MsgEthereumTx":
+		// For evm tx, handle by event
+		events := tx.Events
+		var delegator abci.EventAttribute
+		EventLoop:for _, event := range events {
+			switch event.Type {
+			// Use for Redelegate case, it missing delegator address
+			// So we get it from withdraw_rewards event
+			case "withdraw_rewards":
+				delegator, _ = juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
+			case stakingtypes.EventTypeCreateValidator:
+				valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
+				valAcc, _ := sdk.ValAddressFromBech32(valAddr.Value)
+				delAddr := sdk.AccAddress(valAcc)
+				m.UpdateLockAndUnlockInfo(int64(tx.Height), delAddr.String(), valAddr.Value)
+				// break loop to avoid duplicate events
+				break EventLoop
+
+			case stakingtypes.EventTypeDelegate:
+				valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
+				delAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
+
+				m.UpdateLockAndUnlockInfo(int64(tx.Height), delAddr.Value, valAddr.Value)
+				// break loop to avoid duplicate events
+				break EventLoop
+
+			case stakingtypes.EventTypeUnbond:
+				valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
+				delAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
+				m.UpdateLockAndUnlockInfo(int64(tx.Height), delAddr.Value, valAddr.Value)
+				// break loop to avoid duplicate events
+				break EventLoop
+
+			case stakingtypes.EventTypeCancelUnbondingDelegation:
+				valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
+				delAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
+				
+				m.CompleteUnbonding(int64(tx.Height), delAddr.Value, valAddr.Value)
+				// break loop to avoid duplicate events
+				break EventLoop
+
+			case stakingtypes.EventTypeRedelegate:
+				valAddr1, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeySrcValidator)
+				valAddr2, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDstValidator)
+				m.UpdateLockAndUnlockInfo(int64(tx.Height), delegator.Value, valAddr1.Value)
+				m.UpdateLockAndUnlockInfo(int64(tx.Height), delegator.Value, valAddr2.Value)
+				// break loop to avoid duplicate events
+				break EventLoop
+
+			}
+		}
+
 	}
 
 	return nil
@@ -74,14 +155,19 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 		return err
 	}
 
-	msunlock, err := m.source.GetMultiStakingUnlock(height, stakerAddr, valAddr)
+	err = m.UpdateLockToken(height, stakerAddr, valAddr, mslock)
 	if err != nil {
 		return err
 	}
 
-	// Update token totals BEFORE saving the new lock/unlock data
-	// This ensures we read the old data from the database before it's overwritten
-	err = m.UpdateLockToken(height, stakerAddr, valAddr, mslock)
+	if mslock != nil {
+		err = m.db.SaveMultiStakingLock(height, mslock)
+		if err != nil {
+			return err
+		}
+	}
+
+	msunlock, err := m.source.GetMultiStakingUnlock(height, stakerAddr, valAddr)
 	if err != nil {
 		return err
 	}
@@ -89,14 +175,6 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 	err = m.UpdateUnlockToken(height, stakerAddr, valAddr, msunlock)
 	if err != nil {
 		return err
-	}
-
-	// Now save the new lock/unlock data
-	if mslock != nil {
-		err = m.db.SaveMultiStakingLock(height, mslock)
-		if err != nil {
-			return err
-		}
 	}
 
 	if msunlock != nil {
@@ -153,7 +231,6 @@ func (m *Module) UpdateLockToken(height int64, stakerAddr string, valAddr string
 		}
 	}
 
-	// Add new lock amount to totals (if lock exists)
 	if lock != nil {
 		denom := lock.LockedCoin.Denom
 		value, exists := total[denom]
@@ -221,6 +298,5 @@ func (m *Module) UpdateUnlockToken(height int64, stakerAddr string, valAddr stri
 			}
 		}
 	}
-
 	return m.db.SaveUnbondingToken2(height, total)
 }

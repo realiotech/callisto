@@ -53,6 +53,7 @@ func (m *Module) UpdateMultiStakingLocks(height int64) error {
 		return err
 	}
 
+	// Drop old table and reset ms_lock from state
 	return m.db.SaveMultiStakingLocks(height, multiStakingLocks)
 }
 
@@ -64,12 +65,12 @@ func (m *Module) UpdateMultiStakingUnlocks(height int64) error {
 	if err != nil {
 		return err
 	}
-
 	err = m.db.SaveUnbondingToken(height, multiStakingUnlocks)
 	if err != nil {
 		return err
 	}
 
+	// Drop old table and reset ms_unlock from state
 	return m.db.SaveMultiStakingUnlocks(height, multiStakingUnlocks)
 }
 
