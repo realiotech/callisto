@@ -33,11 +33,7 @@ func (m *Module) HandleMsg(_ int, msg juno.Message, tx *juno.Transaction) error 
 
 	switch msg.GetType() {
 	case "/os.evm.v1.MsgEthereumTx":
-<<<<<<< HEAD
-		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &utils.MsgEthereumTx{})
-=======
 		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &legacytx.MsgEthereumTx{})
->>>>>>> hieu/duplicate-events
 		return m.db.SaveEvmTx(int64(tx.Height), tx.TxHash, cosmosMsg.Hash)
 	case "/cosmos.evm.vm.v1.MsgEthereumTx":
 		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &cosmosevmtypes.MsgEthereumTx{})
