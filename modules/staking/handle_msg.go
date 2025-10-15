@@ -11,6 +11,8 @@ import (
 	dbtypes "github.com/forbole/callisto/v4/database/types"
 	"github.com/forbole/callisto/v4/types"
 	"github.com/forbole/callisto/v4/utils"
+	multistakingtypes "github.com/realio-tech/multi-staking-module/x/multi-staking/types"
+
 )
 
 var msgFilter = map[string]bool{
@@ -19,6 +21,7 @@ var msgFilter = map[string]bool{
 	"/cosmos.staking.v1beta1.MsgDelegate":        true,
 	"/cosmos.staking.v1beta1.MsgUndelegate":      true,
 	"/cosmos.staking.v1beta1.MsgBeginRedelegate": true,
+	"/multistaking.v1.MsgCreateEVMValidator":        true,
 }
 
 // HandleMsgExec implements modules.AuthzMessageModule
@@ -38,6 +41,10 @@ func (m *Module) HandleMsg(_ int, msg juno.Message, tx *juno.Transaction) error 
 	case "/cosmos.staking.v1beta1.MsgCreateValidator":
 		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &stakingtypes.MsgCreateValidator{})
 		return m.handleMsgCreateValidator(int64(tx.Height), cosmosMsg)
+	
+	case "/multistaking.v1.MsgCreateEVMValidator":
+		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &multistakingtypes.MsgCreateEVMValidator{})
+		return m.handleMsgCreateEVMValidator(int64(tx.Height), cosmosMsg)
 
 	case "/cosmos.staking.v1beta1.MsgEditValidator":
 		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &stakingtypes.MsgEditValidator{})
@@ -84,6 +91,26 @@ func (m *Module) handleMsgCreateValidator(height int64, msg *stakingtypes.MsgCre
 	validatorInfo := types.MSValidatorInfo{
 		ConsensusAddress: convertPubkeyToAddr(consPubkey),
 		Denom:            msg.Value.Denom,
+	}
+	infos = append(infos, validatorInfo)
+
+	return m.db.SaveValidatorDenom(height, infos)
+}
+
+func (m *Module) handleMsgCreateEVMValidator(height int64, msg *multistakingtypes.MsgCreateEVMValidator) error {
+	err := m.RefreshValidatorInfos(height, msg.ValidatorAddress)
+	if err != nil {
+		return fmt.Errorf("error while refreshing validator from MsgCreateValidator: %s", err)
+	}
+
+	var infos []types.MSValidatorInfo
+	consPubkey, err := m.getValidatorConsPubKeyByCreateEVMMsg(msg)
+	if err != nil {
+		return err
+	}
+	validatorInfo := types.MSValidatorInfo{
+		ConsensusAddress: convertPubkeyToAddr(consPubkey),
+		Denom:            fmt.Sprintf("erc20:%s", msg.ContractAddress),
 	}
 	infos = append(infos, validatorInfo)
 
