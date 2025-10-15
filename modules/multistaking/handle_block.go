@@ -19,12 +19,8 @@ import (
 func (m *Module) HandleBlock(
 	block *tmctypes.ResultBlock, res *tmctypes.ResultBlockResults, _ []*juno.Transaction, _ *tmctypes.ResultValidators,
 ) error {
-	events := res.FinalizeBlockEvents
-	for _, tx := range res.TxsResults {
-		events = append(events, tx.Events...)
-	}
 
-	err := m.updateTxsByEvent(block.Block.Height, events)
+	err := m.updateTxsByEvent(block.Block.Height, res.FinalizeBlockEvents)
 	if err != nil {
 		fmt.Printf("Error when updateTxsByEvent, error: %s", err)
 	}
@@ -36,19 +32,8 @@ func (m *Module) updateTxsByEvent(height int64, events []abci.Event) error {
 		Msg("updating txs by event")
 
 	var msEvents []dbtypes.MSEvent
-	var delegator abci.EventAttribute
 	for _, event := range events {
 		switch event.Type {
-		// Use for Redelegate case, it missing delegator address
-		// So we get it from withdraw_rewards event
-		case "withdraw_rewards":
-			delegator, _ = juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
-		case stakingtypes.EventTypeCreateValidator:
-			valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
-			valAcc, _ := sdk.ValAddressFromBech32(valAddr.Value)
-			delAddr := sdk.AccAddress(valAcc)
-			m.UpdateLockAndUnlockInfo(height, delAddr.String(), valAddr.Value)
-
 		case stakingtypes.EventTypeDelegate:
 			valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
 			delAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
@@ -58,7 +43,6 @@ func (m *Module) updateTxsByEvent(height int64, events []abci.Event) error {
 			if err == nil {
 				msEvents = append(msEvents, msEvent)
 			}
-			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr.Value)
 
 		case stakingtypes.EventTypeUnbond:
 			valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
@@ -69,7 +53,6 @@ func (m *Module) updateTxsByEvent(height int64, events []abci.Event) error {
 			if err == nil {
 				msEvents = append(msEvents, msEvent)
 			}
-			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr.Value)
 
 		case stakingtypes.EventTypeCancelUnbondingDelegation:
 			valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
@@ -80,20 +63,12 @@ func (m *Module) updateTxsByEvent(height int64, events []abci.Event) error {
 			if err == nil {
 				msEvents = append(msEvents, msEvent)
 			}
-			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr.Value)
-
 		case stakingtypes.EventTypeCompleteRedelegation:
 			valAddr1, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeySrcValidator)
 			valAddr2, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDstValidator)
 			delAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
 			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr1.Value)
 			m.UpdateLockAndUnlockInfo(height, delAddr.Value, valAddr2.Value)
-
-		case stakingtypes.EventTypeRedelegate:
-			valAddr1, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeySrcValidator)
-			valAddr2, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDstValidator)
-			m.UpdateLockAndUnlockInfo(height, delegator.Value, valAddr1.Value)
-			m.UpdateLockAndUnlockInfo(height, delegator.Value, valAddr2.Value)
 
 		case stakingtypes.EventTypeCompleteUnbonding:
 			valAddr, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyValidator)
