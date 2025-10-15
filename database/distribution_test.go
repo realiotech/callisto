@@ -94,3 +94,120 @@ func (suite *DbTestSuite) TestBigDipperDb_SaveDistributionParams() {
 	suite.Require().Equal(distrParams, stored)
 	suite.Require().Equal(int64(10), rows[0].Height)
 }
+
+func (suite *DbTestSuite) TestBigDipperDb_SaveRewardEarned() {
+	// Save the data
+	reward1 := types.NewRewardEarned("cosmos1address1", sdk.NewCoin("uatom", math.NewInt(1000)), 10)
+	err := suite.database.SaveRewardEarned(reward1)
+	suite.Require().NoError(err)
+
+	reward2 := types.NewRewardEarned("cosmos1address2", sdk.NewCoin("uatom", math.NewInt(2000)), 10)
+	err = suite.database.SaveRewardEarned(reward2)
+	suite.Require().NoError(err)
+
+	reward3 := types.NewRewardEarned("cosmos1address1", sdk.NewCoin("stake", math.NewInt(500)), 10)
+	err = suite.database.SaveRewardEarned(reward3)
+	suite.Require().NoError(err)
+
+	// Verify the data
+	var rows []dbtypes.RewardEarnedRow
+	err = suite.database.Sqlx.Select(&rows, `SELECT * FROM reward_earned ORDER BY delegator_address, denom`)
+	suite.Require().NoError(err)
+	suite.Require().Len(rows, 3, "reward_earned table should contain three rows")
+
+	// Check first row
+	expected1 := dbtypes.NewRewardEarnedRow("cosmos1address1", "stake", "500", 10)
+	suite.Require().True(expected1.Equals(rows[0]))
+
+	// Check second row
+	expected2 := dbtypes.NewRewardEarnedRow("cosmos1address1", "uatom", "1000", 10)
+	suite.Require().True(expected2.Equals(rows[1]))
+
+	// Check third row
+	expected3 := dbtypes.NewRewardEarnedRow("cosmos1address2", "uatom", "2000", 10)
+	suite.Require().True(expected3.Equals(rows[2]))
+
+	// ----------------------------------------------------------------------------------------------------------------
+
+	// Test updating existing reward (same delegator, denom, and height)
+	updatedReward := types.NewRewardEarned("cosmos1address1", sdk.NewCoin("uatom", math.NewInt(1500)), 10)
+	err = suite.database.SaveRewardEarned(updatedReward)
+	suite.Require().NoError(err)
+
+	// Verify the data was updated
+	rows = []dbtypes.RewardEarnedRow{}
+	err = suite.database.Sqlx.Select(&rows, `SELECT * FROM reward_earned WHERE delegator_address = 'cosmos1address1' AND denom = 'uatom'`)
+	suite.Require().NoError(err)
+	suite.Require().Len(rows, 1, "should have one updated row")
+
+	expectedUpdated := dbtypes.NewRewardEarnedRow("cosmos1address1", "uatom", "1500", 10)
+	suite.Require().True(expectedUpdated.Equals(rows[0]))
+
+	// ----------------------------------------------------------------------------------------------------------------
+
+	// Test saving additional reward at different height
+	additionalReward := types.NewRewardEarned("cosmos1address3", sdk.NewCoin("uatom", math.NewInt(3000)), 20)
+	err = suite.database.SaveRewardEarned(additionalReward)
+	suite.Require().NoError(err)
+
+	// Verify the data
+	rows = []dbtypes.RewardEarnedRow{}
+	err = suite.database.Sqlx.Select(&rows, `SELECT * FROM reward_earned ORDER BY height, delegator_address, denom`)
+	suite.Require().NoError(err)
+	suite.Require().Len(rows, 4, "reward_earned table should contain four rows")
+
+	// Check the new row
+	expected4 := dbtypes.NewRewardEarnedRow("cosmos1address3", "uatom", "3000", 20)
+	suite.Require().True(expected4.Equals(rows[3]))
+}
+
+func (suite *DbTestSuite) TestBigDipperDb_GetRewardEarned() {
+	// First, save some test data
+	reward1 := types.NewRewardEarned("cosmos1address1", sdk.NewCoin("uatom", math.NewInt(1000)), 10)
+	err := suite.database.SaveRewardEarned(reward1)
+	suite.Require().NoError(err)
+
+	reward2 := types.NewRewardEarned("cosmos1address1", sdk.NewCoin("stake", math.NewInt(500)), 10)
+	err = suite.database.SaveRewardEarned(reward2)
+	suite.Require().NoError(err)
+
+	reward3 := types.NewRewardEarned("cosmos1address2", sdk.NewCoin("uatom", math.NewInt(2000)), 20)
+	err = suite.database.SaveRewardEarned(reward3)
+	suite.Require().NoError(err)
+
+	// Test GetRewardEarned - get specific reward
+	retrievedReward, err := suite.database.GetRewardEarned("cosmos1address1", "uatom", 10)
+	suite.Require().NoError(err)
+	suite.Require().NotNil(retrievedReward)
+	suite.Require().Equal("cosmos1address1", retrievedReward.DelegatorAddress)
+	suite.Require().Equal("uatom", retrievedReward.Coin.Denom)
+	suite.Require().Equal("1000", retrievedReward.Coin.Amount.String())
+	suite.Require().Equal(int64(10), retrievedReward.Height)
+
+	// Test GetRewardEarnedByDelegator - get reward for a delegator
+	delegatorReward, err := suite.database.GetRewardEarnedByDelegator("cosmos1address1")
+	suite.Require().NoError(err)
+	suite.Require().NotNil(delegatorReward)
+	suite.Require().Equal("cosmos1address1", delegatorReward.DelegatorAddress)
+	// Should return one of the rewards for this delegator
+	suite.Require().True(delegatorReward.Coin.Denom == "uatom" || delegatorReward.Coin.Denom == "stake")
+
+	// Test GetRewardEarnedByHeight - get all rewards for a specific height
+	heightRewards, err := suite.database.GetRewardEarnedByHeight(10)
+	suite.Require().NoError(err)
+	suite.Require().Len(heightRewards, 2)
+
+	// Should be ordered by delegator_address, then by denom
+	suite.Require().Equal("cosmos1address1", heightRewards[0].DelegatorAddress)
+	suite.Require().Equal("cosmos1address1", heightRewards[1].DelegatorAddress)
+	suite.Require().Equal("stake", heightRewards[0].Coin.Denom)
+	suite.Require().Equal("uatom", heightRewards[1].Coin.Denom)
+
+	// Test GetRewardEarnedByHeight for height with single reward
+	heightRewards20, err := suite.database.GetRewardEarnedByHeight(20)
+	suite.Require().NoError(err)
+	suite.Require().Len(heightRewards20, 1)
+	suite.Require().Equal("cosmos1address2", heightRewards20[0].DelegatorAddress)
+	suite.Require().Equal("uatom", heightRewards20[0].Coin.Denom)
+	suite.Require().Equal("2000", heightRewards20[0].Coin.Amount.String())
+}
