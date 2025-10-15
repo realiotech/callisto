@@ -30,3 +30,31 @@ func (v CommunityPoolRow) Equals(w CommunityPoolRow) bool {
 	return v.Coins.Equal(w.Coins) &&
 		v.Height == w.Height
 }
+
+// -------------------------------------------------------------------------------------------------------------------
+
+// RewardEarnedRow represents a single row inside the reward_earned table
+type RewardEarnedRow struct {
+	DelegatorAddress string `db:"delegator_address"`
+	Denom            string `db:"denom"`
+	Amount           string `db:"amount"`
+	Height           int64  `db:"height"`
+}
+
+// NewRewardEarnedRow allows to easily create a new RewardEarnedRow
+func NewRewardEarnedRow(delegatorAddress string, denom string, amount string, height int64) RewardEarnedRow {
+	return RewardEarnedRow{
+		DelegatorAddress: delegatorAddress,
+		Denom:            denom,
+		Amount:           amount,
+		Height:           height,
+	}
+}
+
+// Equals return true if one RewardEarnedRow representing the same row as the original one
+func (v RewardEarnedRow) Equals(w RewardEarnedRow) bool {
+	return v.DelegatorAddress == w.DelegatorAddress &&
+		v.Denom == w.Denom &&
+		v.Amount == w.Amount &&
+		v.Height == w.Height
+}
