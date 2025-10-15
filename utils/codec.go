@@ -28,16 +28,15 @@ import (
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
-	"github.com/cosmos/gogoproto/proto"
-	ostypes "github.com/evmos/os/types"
-	multistakingtypes "github.com/realio-tech/multi-staking-module/x/multi-staking/types"
-	ethcryptocodec "github.com/realiotech/realio-network/crypto/codec"
-	bridgemoduletypes "github.com/realiotech/realio-network/x/bridge/types"
-	assetmoduletypes "github.com/realiotech/realio-network/x/asset/types"
-
-	// evmtypes "github.com/evmos/os/x/evm/types"
 	cosmosevmcryptocodec "github.com/cosmos/evm/crypto/codec"
 	cosmosevmtypes "github.com/cosmos/evm/x/vm/types"
+	"github.com/cosmos/gogoproto/proto"
+	multistakingtypes "github.com/realio-tech/multi-staking-module/x/multi-staking/types"
+	ethcryptocodec "github.com/realiotech/realio-network/crypto/codec"
+	assetmoduletypes "github.com/realiotech/realio-network/x/asset/types"
+	bridgemoduletypes "github.com/realiotech/realio-network/x/bridge/types"
+
+	// evmtypes "github.com/evmos/os/x/evm/types"
 	ibcclientv10types "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
 )
 
@@ -48,7 +47,7 @@ func GetCodec() codec.Codec {
 	once.Do(func() {
 		interfaceRegistry := codectypes.NewInterfaceRegistry()
 		getBasicManagers().RegisterInterfaces(interfaceRegistry)
-		ostypes.RegisterInterfaces(interfaceRegistry)
+		// ostypes.RegisterInterfaces(interfaceRegistry)
 		ethcryptocodec.RegisterInterfaces(interfaceRegistry)
 		cosmosevmcryptocodec.RegisterInterfaces(interfaceRegistry)
 		cosmosevmtypes.RegisterInterfaces(interfaceRegistry)

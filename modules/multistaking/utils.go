@@ -39,7 +39,7 @@ func (m *Module) convertValidatorInfo(info *multistakingtypes.ValidatorInfo) (ty
 	}
 	return types.MSValidatorInfo{
 		ConsensusAddress: convertPubkeyToAddr(pubKey),
-		Denom: info.BondDenom,
+		Denom:            info.BondDenom,
 	}, nil
 }
 
