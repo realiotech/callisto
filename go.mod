@@ -8,12 +8,14 @@ require (
 	cosmossdk.io/log v1.5.0
 	cosmossdk.io/math v1.5.3
 	cosmossdk.io/store v1.1.1
+	cosmossdk.io/x/evidence v0.1.1
 	cosmossdk.io/x/feegrant v0.1.1
 	cosmossdk.io/x/upgrade v0.1.4
 	github.com/cometbft/cometbft v0.38.17
 	github.com/cosmos/cosmos-sdk v0.50.14
 	github.com/cosmos/evm v0.2.0
 	github.com/cosmos/gogoproto v1.7.0
+	github.com/cosmos/ibc-go/v10 v10.1.1
 	github.com/forbole/juno/v6 v6.0.1
 	github.com/go-co-op/gocron v1.37.0
 	github.com/golangci/golangci-lint v1.55.2
@@ -49,7 +51,6 @@ require (
 	cosmossdk.io/errors v1.0.2 // indirect
 	cosmossdk.io/simapp v0.0.0-20240805084742-3fc80745eef2 // indirect
 	cosmossdk.io/x/circuit v0.1.1 // indirect
-	cosmossdk.io/x/evidence v0.1.1 // indirect
 	cosmossdk.io/x/nft v0.1.1 // indirect
 	cosmossdk.io/x/tx v0.13.7 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
@@ -116,7 +117,6 @@ require (
 	github.com/cosmos/gogogateway v1.2.0 // indirect
 	github.com/cosmos/iavl v1.2.2 // indirect
 	github.com/cosmos/ibc-go/modules/capability v1.0.1 // indirect
-	github.com/cosmos/ibc-go/v10 v10.1.1 // indirect
 	github.com/cosmos/ics23/go v0.11.0 // indirect
 	github.com/cosmos/ledger-cosmos-go v0.14.0 // indirect
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
