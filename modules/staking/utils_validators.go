@@ -12,9 +12,16 @@ import (
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	multistakingtypes "github.com/realio-tech/multi-staking-module/x/multi-staking/types"
 )
 
 func (m *Module) getValidatorConsPubKeyByCreateMsg(msg *stakingtypes.MsgCreateValidator) (cryptotypes.PubKey, error) {
+	var pubKey cryptotypes.PubKey
+	err := m.cdc.UnpackAny(msg.Pubkey, &pubKey)
+	return pubKey, err
+}
+
+func (m *Module) getValidatorConsPubKeyByCreateEVMMsg(msg *multistakingtypes.MsgCreateEVMValidator) (cryptotypes.PubKey, error) {
 	var pubKey cryptotypes.PubKey
 	err := m.cdc.UnpackAny(msg.Pubkey, &pubKey)
 	return pubKey, err
