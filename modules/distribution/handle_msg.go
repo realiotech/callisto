@@ -41,8 +41,23 @@ func (m *Module) HandleMsg(_ int, msg juno.Message, tx *juno.Transaction) error 
 			return err
 		}
 		delegatorAddr := sdk.AccAddress(valAddr)
-		tx.Events[0].
-		return m.updateRewardEarned(delegatorAddr.String(), cosmosMsg.Amount.String(), int64(tx.Height))
+		var amount string
+
+		for _, event := range tx.Events {
+			if event.Type == "withdraw_commission" {
+				// Get the amount attribute
+				amountAttr, err := juno.FindAttributeByKey(event, sdk.AttributeKeyAmount)
+				if err != nil {
+					log.Warn().Str("module", "distribution").Str("hash", tx.TxHash).Msg("amount attribute not found in withdraw_commission event")
+					continue
+				}
+				amount = amountAttr.Value
+			}
+		}
+
+		fmt.Println("withdraw_commission, %s, %s, %d", delegatorAddr.String(), amount, tx.Height)
+		
+		return m.updateRewardEarned(delegatorAddr.String(), amount, int64(tx.Height))
 	}
 	return nil
 }
