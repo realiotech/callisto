@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 )
 
@@ -15,5 +16,23 @@ func NewDistributionParams(params distrtypes.Params, height int64) *Distribution
 	return &DistributionParams{
 		Params: params,
 		Height: height,
+	}
+}
+
+// -------------------------------------------------------------------------------------------------------------------
+
+// RewardEarned represents a reward earned by a delegator
+type RewardEarned struct {
+	DelegatorAddress string
+	Coin             sdk.Coin
+	Height           int64
+}
+
+// NewRewardEarned allows to build a new RewardEarned instance
+func NewRewardEarned(delegatorAddress string, coin sdk.Coin, height int64) RewardEarned {
+	return RewardEarned{
+		DelegatorAddress: delegatorAddress,
+		Coin:             coin,
+		Height:           height,
 	}
 }
