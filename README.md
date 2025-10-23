@@ -30,4 +30,11 @@ This will:
 1. Create a Docker container running a PostgreSQL database.
 2. Run all the tests using that database as support.
 
+## Development
+
+All new feature and bugfix branches must be created off the main branch `(chains/realio)`
+
+Pull requests should target the integration branch for testing `(chains/realio-testnet)`.
+
+The `chains/realio` branch is the default and canonical branch of this repository.
 

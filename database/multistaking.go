@@ -11,11 +11,17 @@ import (
 )
 
 func (db *Db) SaveMultiStakingLocks(height int64, multiStakingLocks []*multistakingtypes.MultiStakingLock) error {
+	query := "DELETE FROM ms_locks"
+	_, err := db.SQL.Exec(query)
+	if err != nil {
+		return fmt.Errorf("error while deleting ms_unlocks: %s", err)
+	}
+
 	if len(multiStakingLocks) == 0 {
 		return nil
 	}
 
-	query := `INSERT INTO ms_locks (staker_addr, val_addr, denom, amount, bond_weight, height) VALUES`
+	query = `INSERT INTO ms_locks (staker_addr, val_addr, denom, amount, bond_weight, height) VALUES`
 
 	var param []interface{}
 
@@ -36,7 +42,7 @@ ON CONFLICT (staker_addr, val_addr) DO UPDATE
 		height = excluded.height
 WHERE ms_locks.height <= excluded.height`
 
-	_, err := db.SQL.Exec(query, param...)
+	_, err = db.SQL.Exec(query, param...)
 	if err != nil {
 		return fmt.Errorf("error while saving msLock: %s", err)
 	}
@@ -45,11 +51,18 @@ WHERE ms_locks.height <= excluded.height`
 }
 
 func (db *Db) SaveMultiStakingUnlocks(height int64, multiStakingUnlocks []*multistakingtypes.MultiStakingUnlock) error {
+
+	query := "DELETE FROM ms_unlocks"
+	_, err := db.SQL.Exec(query)
+	if err != nil {
+		return fmt.Errorf("error while deleting ms_unlocks: %s", err)
+	}
+
 	if len(multiStakingUnlocks) == 0 {
 		return nil
 	}
 
-	query := `INSERT INTO ms_unlocks (staker_addr, val_addr, creation_height, denom, amount, bond_weight, height) VALUES`
+	query = `INSERT INTO ms_unlocks (staker_addr, val_addr, creation_height, denom, amount, bond_weight, height) VALUES`
 
 	var param []interface{}
 	count := 0
@@ -74,7 +87,7 @@ ON CONFLICT (staker_addr, val_addr, creation_height) DO UPDATE
 		height = excluded.height
 WHERE ms_unlocks.height <= excluded.height`
 
-	_, err := db.SQL.Exec(query, param...)
+	_, err = db.SQL.Exec(query, param...)
 	if err != nil {
 		return fmt.Errorf("error while saving msUnlock: %s", err)
 	}
