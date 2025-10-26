@@ -3,14 +3,10 @@ package distribution
 import (
 	"fmt"
 
-	juno "github.com/forbole/juno/v6/types"
-	"github.com/rs/zerolog/log"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/forbole/callisto/v4/types"
-	"github.com/forbole/callisto/v4/utils"
-	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
-
-
+	juno "github.com/forbole/juno/v6/types"
+	"github.com/rs/zerolog/log"
 )
 
 var msgFilter = map[string]bool{
@@ -33,31 +29,6 @@ func (m *Module) HandleMsg(_ int, msg juno.Message, tx *juno.Transaction) error 
 
 	if msg.GetType() == "/cosmos.distribution.v1beta1.MsgFundCommunityPool" {
 		return m.updateCommunityPool(int64(tx.Height))
-	}
-	if msg.GetType() == "/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission" {
-		cosmosMsg := utils.UnpackMessage(m.cdc, msg.GetBytes(), &distrtypes.MsgWithdrawValidatorCommission{})
-		valAddr, err := sdk.ValAddressFromBech32(cosmosMsg.ValidatorAddress)
-		if err != nil {
-			return err
-		}
-		delegatorAddr := sdk.AccAddress(valAddr)
-		var amount string
-
-		for _, event := range tx.Events {
-			if event.Type == "withdraw_commission" {
-				// Get the amount attribute
-				amountAttr, err := juno.FindAttributeByKey(event, sdk.AttributeKeyAmount)
-				if err != nil {
-					log.Warn().Str("module", "distribution").Str("hash", tx.TxHash).Msg("amount attribute not found in withdraw_commission event")
-					continue
-				}
-				amount = amountAttr.Value
-			}
-		}
-
-		fmt.Println("withdraw_commission, %s, %s, %d", delegatorAddr.String(), amount, tx.Height)
-		
-		return m.updateRewardEarned(delegatorAddr.String(), amount, int64(tx.Height))
 	}
 	return nil
 }
