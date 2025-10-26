@@ -7,7 +7,11 @@ import (
 	"github.com/rs/zerolog/log"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+)
+
+const (
+	DistributionModuleAccount = "realio1jv65s3grqf6v6jl3dp4t6c9t9rk99cd8w2qk49"
 )
 
 // HandleBlock implements BlockModule
@@ -22,15 +26,19 @@ func (m *Module) HandleBlock(
 	}
 
 	for _, event := range events {
-		// Delegation rewards
-		if event.Type == "withdraw_rewards" {
-			delegator, _ := juno.FindAttributeByKey(event, stakingtypes.AttributeKeyDelegator)
-			amount, _ := juno.FindAttributeByKey(event, sdk.AttributeKeyAmount)
-			err := m.updateRewardEarned(delegator.Value, amount.Value, block.Block.Height)
-			if err != nil {
-				return err
+		if event.Type == banktypes.EventTypeTransfer {
+			sender, err := juno.FindAttributeByKey(event, banktypes.AttributeKeySender)
+			if err == nil && sender.Value == DistributionModuleAccount {
+				delegator, _ := juno.FindAttributeByKey(event, banktypes.AttributeKeyRecipient)
+				amount, _ := juno.FindAttributeByKey(event, sdk.AttributeKeyAmount)
+				err := m.updateRewardEarned(delegator.Value, amount.Value, block.Block.Height)
+				if err != nil {
+					return err
+				}
 			}
+
 		}
+
 	}
 
 	return nil
