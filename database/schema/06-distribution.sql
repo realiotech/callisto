@@ -26,3 +26,4 @@ CREATE TABLE community_pool
     CONSTRAINT one_row_uni CHECK (one_row_id)
 );
 CREATE INDEX community_pool_height_index ON community_pool (height);
+
