@@ -52,3 +52,4 @@
 - "!include public_bridge_in.yaml"
 - "!include public_bridge_out.yaml"
 - "!include public_etransaction.yaml"
+- "!include public_reward_earned.yaml"
