@@ -17,6 +17,7 @@ import (
 var msgFilter = map[string]bool{
 	"/os.evm.v1.MsgEthereumTx":  true,
 	"/cosmos.evm.vm.v1.MsgEthereumTx": true,
+	"/cosmos.evm.vm.v2.MsgEthereumTx": true,
 }
 
 // HandleMsgExec implements modules.AuthzMessageModule
