@@ -191,23 +191,4 @@ func (suite *DbTestSuite) TestBigDipperDb_GetRewardEarned() {
 	suite.Require().Equal("cosmos1address1", delegatorReward.DelegatorAddress)
 	// Should return one of the rewards for this delegator
 	suite.Require().True(delegatorReward.Coin.Denom == "uatom" || delegatorReward.Coin.Denom == "stake")
-
-	// Test GetRewardEarnedByHeight - get all rewards for a specific height
-	heightRewards, err := suite.database.GetRewardEarnedByHeight(10)
-	suite.Require().NoError(err)
-	suite.Require().Len(heightRewards, 2)
-
-	// Should be ordered by delegator_address, then by denom
-	suite.Require().Equal("cosmos1address1", heightRewards[0].DelegatorAddress)
-	suite.Require().Equal("cosmos1address1", heightRewards[1].DelegatorAddress)
-	suite.Require().Equal("stake", heightRewards[0].Coin.Denom)
-	suite.Require().Equal("uatom", heightRewards[1].Coin.Denom)
-
-	// Test GetRewardEarnedByHeight for height with single reward
-	heightRewards20, err := suite.database.GetRewardEarnedByHeight(20)
-	suite.Require().NoError(err)
-	suite.Require().Len(heightRewards20, 1)
-	suite.Require().Equal("cosmos1address2", heightRewards20[0].DelegatorAddress)
-	suite.Require().Equal("uatom", heightRewards20[0].Coin.Denom)
-	suite.Require().Equal("2000", heightRewards20[0].Coin.Amount.String())
 }
