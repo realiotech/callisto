@@ -1041,8 +1041,6 @@ github.com/ethereum/go-verkle v0.2.2 h1:I2W0WjnrFUIzzVPwm8ykY+7pL2d4VhlsePn4j7cn
 github.com/ethereum/go-verkle v0.2.2/go.mod h1:M3b90YRnzqKyyzBEWJGqj8Qff4IDeXnzFw0P9bFw3uk=
 github.com/ettle/strcase v0.1.1 h1:htFueZyVeE1XNnMEfbqp5r67qAN/4r6ya1ysq8Q+Zcw=
 github.com/ettle/strcase v0.1.1/go.mod h1:hzDLsPC7/lwKyBOywSHEP89nt2pDgdy+No1NBA9o9VY=
-github.com/evmos/os v0.0.0-20250318092432-d14323f1cec6 h1:zC09sXzlTMUZr6BdGVn8jc7QhAg+TQuDQsROq7LwBC0=
-github.com/evmos/os v0.0.0-20250318092432-d14323f1cec6/go.mod h1:zgs0dJ8M4AQtRDtGNCa6h2XqQDh4a5ar4Za+B80YJwc=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fatih/color v1.13.0/go.mod h1:kLAiJbzzSOZDVNGyDpeOxJ47H46qBXwg5ILebYFFOfk=
 github.com/fatih/color v1.17.0 h1:GlRw1BRJxkpqUCBKzKOw098ed57fEsKeNjpTe3cSjK4=
@@ -1827,12 +1825,12 @@ github.com/rakyll/statik v0.1.7/go.mod h1:AlZONWzMtEnMs7W4e/1LURLiI49pIMmp6V9Ung
 github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 h1:N/ElC8H3+5XpJzTSTfLsJV/mx9Q9g7kxmchpfZyxgzM=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
-github.com/realiotech/evm v0.5.1-realio h1:9rkKL46l9lWA5i5MKzfWKpv47yucfB/J5YnRZ5ntgRM=
-github.com/realiotech/evm v0.5.1-realio/go.mod h1:AiKOtGMt539qICNH2Kdy+iw9yK3rlcU6MWet3+g8sWs=
+github.com/realiotech/evm v0.5.2 h1:zwiUSrN39g3W5hSbOoot3biukmqpr2nlUmm7qxmIt6Y=
+github.com/realiotech/evm v0.5.2/go.mod h1:AiKOtGMt539qICNH2Kdy+iw9yK3rlcU6MWet3+g8sWs=
 github.com/realiotech/multi-staking v1.2.0-rc2.0.20251110105803-186b12b4bab1 h1:UcV+v00W53tbEWBrCgZXtfIciriFRFez0txCcjswfR0=
 github.com/realiotech/multi-staking v1.2.0-rc2.0.20251110105803-186b12b4bab1/go.mod h1:1Xqnya1oRaig2dHy/PmJjWRczqI/fIGsEt/pPF5XviQ=
-github.com/realiotech/realio-network v1.4.1-0.20251211055638-52057a5c578e h1:keYuMBAw12A6S0jso/7OWkum1zvuInKMdb8KoO5iQxg=
-github.com/realiotech/realio-network v1.4.1-0.20251211055638-52057a5c578e/go.mod h1:t6i8sUZllqyaZTO9p4omrsqek/EDy6HAGXrTE4pgxGM=
+github.com/realiotech/realio-network v1.5.0-rc1 h1:fjf9OGDgpP1wV2WHinaD6luTe1kL6kqXU/ggfS6R2+8=
+github.com/realiotech/realio-network v1.5.0-rc1/go.mod h1:ZZmxYGo4+BJziJWv8eg2FruaCf1kLDyeU4hLYzzuo1o=
 github.com/regen-network/protobuf v1.3.3-alpha.regen.1 h1:OHEc+q5iIAXpqiqFKeLpu5NwTIkVXUs48vFMwzqpqY4=
 github.com/regen-network/protobuf v1.3.3-alpha.regen.1/go.mod h1:2DjTFR1HhMQhiWC5sZ4OhQ3+NtdbZ6oBDKQwq5Ou+FI=
 github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0/go.mod h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo=

@@ -25,7 +25,7 @@ require (
 	github.com/prometheus/client_golang v1.23.0
 	github.com/proullon/ramsql v0.1.3
 	github.com/realio-tech/multi-staking-module v0.0.0-00010101000000-000000000000
-	github.com/realiotech/realio-network v1.4.1-0.20251211055638-52057a5c578e
+	github.com/realiotech/realio-network v1.5.0-rc1
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.20.1
@@ -152,7 +152,6 @@ require (
 	github.com/ethereum/go-ethereum v1.15.11 // indirect
 	github.com/ethereum/go-verkle v0.2.2 // indirect
 	github.com/ettle/strcase v0.1.1 // indirect
-	github.com/evmos/os v0.0.0-20250318092432-d14323f1cec6 // indirect
 	github.com/fatih/color v1.17.0 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
@@ -418,7 +417,7 @@ require (
 )
 
 replace (
-	github.com/cosmos/evm => github.com/realiotech/evm v0.5.1-realio
+	github.com/cosmos/evm => github.com/realiotech/evm v0.5.2
 	// // need this replace to pick up the store changes (Copy func) in our cosmos-sdk fork
 	// cosmossdk.io/store => github.com/evmos/cosmos-sdk/store v0.0.0-20240718141609-414cbd051fbe
 	// // use Evmos geth fork
