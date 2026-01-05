@@ -14,7 +14,7 @@ on:
 
 jobs:
   build:
-    runs-on: [blacksmith-2vcpu-ubuntu-2404]
+    runs-on: [ubuntu-latest]
     environment: realio-mainnet
     steps:
       - name: Checkout
@@ -48,7 +48,7 @@ jobs:
   update-gitops:
     needs: build
     environment: realio-mainnet
-    runs-on: [blacksmith-2vcpu-ubuntu-2404]
+    runs-on: [ubuntu-latest]
     steps:
     - name: Checkout gitops repository
       uses: actions/checkout@v4
