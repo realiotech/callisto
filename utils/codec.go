@@ -30,6 +30,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	cosmosevmcryptocodec "github.com/cosmos/evm/crypto/codec"
 	cosmosevmtypes "github.com/cosmos/evm/x/vm/types"
+	feesponsortypes "github.com/cosmos/evm/x/feesponsor/types"
 	"github.com/cosmos/gogoproto/proto"
 	multistakingtypes "github.com/realio-tech/multi-staking-module/x/multi-staking/types"
 	ethcryptocodec "github.com/realiotech/realio-network/crypto/codec"
@@ -55,6 +56,7 @@ func GetCodec() codec.Codec {
 		multistakingtypes.RegisterInterfaces(interfaceRegistry)
 		bridgemoduletypes.RegisterInterfaces(interfaceRegistry)
 		assetmoduletypes.RegisterInterfaces(interfaceRegistry)
+		feesponsortypes.RegisterInterfaces(interfaceRegistry)
 		std.RegisterInterfaces(interfaceRegistry)
 		cdc = codec.NewProtoCodec(interfaceRegistry)
 	})
