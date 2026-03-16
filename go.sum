@@ -900,8 +900,8 @@ github.com/cockroachdb/redact v1.1.6/go.mod h1:BVNblN9mBWFyMyqK1k3AAiSxhvhfK2oOZ
 github.com/cockroachdb/tokenbucket v0.0.0-20230807174530-cc333fc44b06 h1:zuQyyAKVxetITBuuhv3BI9cMrmStnpT18zmgmTxunpo=
 github.com/cockroachdb/tokenbucket v0.0.0-20230807174530-cc333fc44b06/go.mod h1:7nc4anLGjupUW/PeY5qiNYsdNXj7zopG+eqsS7To5IQ=
 github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd/go.mod h1:sE/e/2PUdi/liOCUjSTXgM1o87ZssimdTWN964YiIeI=
-github.com/cometbft/cometbft v0.38.19 h1:vNdtCkvhuwUlrcLPAyigV7lQpmmo+tAq8CsB8gZjEYw=
-github.com/cometbft/cometbft v0.38.19/go.mod h1:UCu8dlHqvkAsmAFmWDRWNZJPlu6ya2fTWZlDrWsivwo=
+github.com/cometbft/cometbft v0.38.21 h1:qcIJSH9LiwU5s6ZgKR5eRbsLNucbubfraDs5bzgjtOI=
+github.com/cometbft/cometbft v0.38.21/go.mod h1:UCu8dlHqvkAsmAFmWDRWNZJPlu6ya2fTWZlDrWsivwo=
 github.com/cometbft/cometbft-db v0.14.1 h1:SxoamPghqICBAIcGpleHbmoPqy+crij/++eZz3DlerQ=
 github.com/cometbft/cometbft-db v0.14.1/go.mod h1:KHP1YghilyGV/xjD5DP3+2hyigWx0WTp9X+0Gnx0RxQ=
 github.com/consensys/gnark-crypto v0.18.0 h1:vIye/FqI50VeAr0B3dx+YjeIvmc3LWz4yEfbWBpTUf0=
@@ -1825,12 +1825,12 @@ github.com/rakyll/statik v0.1.7/go.mod h1:AlZONWzMtEnMs7W4e/1LURLiI49pIMmp6V9Ung
 github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 h1:N/ElC8H3+5XpJzTSTfLsJV/mx9Q9g7kxmchpfZyxgzM=
 github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
-github.com/realiotech/evm v0.5.2 h1:zwiUSrN39g3W5hSbOoot3biukmqpr2nlUmm7qxmIt6Y=
-github.com/realiotech/evm v0.5.2/go.mod h1:AiKOtGMt539qICNH2Kdy+iw9yK3rlcU6MWet3+g8sWs=
+github.com/realiotech/evm v0.5.2-0.20260313133343-22d11a81faf9 h1:2TDOQSHlp5g9ZvYR+cDeVJzzJzqs5DSsvbBqGhQukaE=
+github.com/realiotech/evm v0.5.2-0.20260313133343-22d11a81faf9/go.mod h1:AiKOtGMt539qICNH2Kdy+iw9yK3rlcU6MWet3+g8sWs=
 github.com/realiotech/multi-staking v1.2.0 h1:KFxivYApcMFdsmLmuEu+EhwGommdAd/4jU+Q/tnIl4g=
 github.com/realiotech/multi-staking v1.2.0/go.mod h1:1Xqnya1oRaig2dHy/PmJjWRczqI/fIGsEt/pPF5XviQ=
-github.com/realiotech/realio-network v1.5.0-rc1 h1:fjf9OGDgpP1wV2WHinaD6luTe1kL6kqXU/ggfS6R2+8=
-github.com/realiotech/realio-network v1.5.0-rc1/go.mod h1:ZZmxYGo4+BJziJWv8eg2FruaCf1kLDyeU4hLYzzuo1o=
+github.com/realiotech/realio-network v1.5.1-0.20260314121535-5b2b684457d8 h1:ov6k3VdJBnXN8zPGPAum0+XWNIwKfmaXdT6rAUp2c/k=
+github.com/realiotech/realio-network v1.5.1-0.20260314121535-5b2b684457d8/go.mod h1:l9ZcxNj7ryzYWmZFeCFgg3NMlnjz0WCm1l/l9HjUlT4=
 github.com/regen-network/protobuf v1.3.3-alpha.regen.1 h1:OHEc+q5iIAXpqiqFKeLpu5NwTIkVXUs48vFMwzqpqY4=
 github.com/regen-network/protobuf v1.3.3-alpha.regen.1/go.mod h1:2DjTFR1HhMQhiWC5sZ4OhQ3+NtdbZ6oBDKQwq5Ou+FI=
 github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0/go.mod h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo=

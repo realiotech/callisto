@@ -11,7 +11,7 @@ require (
 	cosmossdk.io/x/evidence v0.2.0
 	cosmossdk.io/x/feegrant v0.2.0
 	cosmossdk.io/x/upgrade v0.2.0
-	github.com/cometbft/cometbft v0.38.19
+	github.com/cometbft/cometbft v0.38.21
 	github.com/cosmos/cosmos-sdk v0.53.5-0.20251030204916-768cb210885c
 	github.com/cosmos/evm v0.5.1
 	github.com/cosmos/gogoproto v1.7.2
@@ -25,7 +25,7 @@ require (
 	github.com/prometheus/client_golang v1.23.0
 	github.com/proullon/ramsql v0.1.3
 	github.com/realio-tech/multi-staking-module v0.0.0-00010101000000-000000000000
-	github.com/realiotech/realio-network v1.5.0-rc1
+	github.com/realiotech/realio-network v1.5.1-0.20260314121535-5b2b684457d8
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.20.1
@@ -417,7 +417,7 @@ require (
 )
 
 replace (
-	github.com/cosmos/evm => github.com/realiotech/evm v0.5.2
+	github.com/cosmos/evm => github.com/realiotech/evm v0.5.2-0.20260313133343-22d11a81faf9
 	// // need this replace to pick up the store changes (Copy func) in our cosmos-sdk fork
 	// cosmossdk.io/store => github.com/evmos/cosmos-sdk/store v0.0.0-20240718141609-414cbd051fbe
 	// // use Evmos geth fork
