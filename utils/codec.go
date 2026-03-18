@@ -35,6 +35,7 @@ import (
 	ethcryptocodec "github.com/realiotech/realio-network/crypto/codec"
 	assetmoduletypes "github.com/realiotech/realio-network/x/asset/types"
 	bridgemoduletypes "github.com/realiotech/realio-network/x/bridge/types"
+	feesponsortypes "github.com/cosmos/evm/x/feesponsor/types"
 
 	// evmtypes "github.com/evmos/os/x/evm/types"
 	ibcclientv10types "github.com/cosmos/ibc-go/v10/modules/core/02-client/types"
@@ -55,6 +56,7 @@ func GetCodec() codec.Codec {
 		multistakingtypes.RegisterInterfaces(interfaceRegistry)
 		bridgemoduletypes.RegisterInterfaces(interfaceRegistry)
 		assetmoduletypes.RegisterInterfaces(interfaceRegistry)
+		feesponsortypes.RegisterInterfaces(interfaceRegistry)
 		std.RegisterInterfaces(interfaceRegistry)
 		cdc = codec.NewProtoCodec(interfaceRegistry)
 	})
