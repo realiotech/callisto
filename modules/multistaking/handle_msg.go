@@ -208,7 +208,7 @@ func (m *Module) UpdateLockToken(height int64, stakerAddr string, valAddr string
 		denom := tokenRow.Denom
 		amount, ok := cosmossdk_io_math.NewIntFromString(tokenRow.Amount)
 		if !ok {
-			return fmt.Errorf("NewIntFromString false", tokenRow.Amount)
+			return fmt.Errorf("NewIntFromString failed for amount %q", tokenRow.Amount)
 		}
 
 		total[denom] = amount
@@ -219,7 +219,7 @@ func (m *Module) UpdateLockToken(height int64, stakerAddr string, valAddr string
 		amount, ok := cosmossdk_io_math.NewIntFromString(lockRow.Amount)
 
 		if !ok {
-			return fmt.Errorf("NewIntFromString false", lockRow.Amount)
+			return fmt.Errorf("NewIntFromString failed for amount %q", lockRow.Amount)
 		}
 		amount = amount.Neg()
 
@@ -265,7 +265,7 @@ func (m *Module) UpdateUnlockToken(height int64, stakerAddr string, valAddr stri
 		denom := tokenRow.Denom
 		amount, ok := cosmossdk_io_math.NewIntFromString(tokenRow.Amount)
 		if !ok {
-			return fmt.Errorf("NewIntFromString false", tokenRow.Amount)
+			return fmt.Errorf("NewIntFromString failed for amount %q", tokenRow.Amount)
 		}
 
 		total[denom] = amount
@@ -275,7 +275,7 @@ func (m *Module) UpdateUnlockToken(height int64, stakerAddr string, valAddr stri
 		denom := row.Denom
 		amount, ok := cosmossdk_io_math.NewIntFromString(row.Amount)
 		if !ok {
-			return fmt.Errorf("NewIntFromString false", row.Amount)
+			return fmt.Errorf("NewIntFromString failed for amount %q", row.Amount)
 		}
 		amount = amount.Neg()
 

@@ -65,6 +65,7 @@ func (m *Module) trapSignal() {
 	signal.Notify(sigCh, syscall.SIGINT)
 
 	go func() {
+		<-sigCh
 		defer m.node.Stop()
 		defer waitGroup.Done()
 	}()
