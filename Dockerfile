@@ -6,6 +6,8 @@ RUN go mod download
 RUN make build
 
 FROM alpine:latest
+RUN adduser -D -s /bin/sh callisto
 WORKDIR /callisto
 COPY --from=builder /go/src/github.com/forbole/callisto/build/callisto /usr/bin/callisto
+USER callisto
 CMD [ "callisto" ]
