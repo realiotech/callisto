@@ -1,8 +1,6 @@
 module github.com/forbole/callisto/v4
 
-go 1.23.8
-
-toolchain go1.23.9
+go 1.24.0
 
 require (
 	cosmossdk.io/log v1.6.1
@@ -162,7 +160,7 @@ require (
 	github.com/getsentry/sentry-go v0.35.0 // indirect
 	github.com/ghostiam/protogetter v0.2.3 // indirect
 	github.com/go-critic/go-critic v0.9.0 // indirect
-	github.com/go-jose/go-jose/v4 v4.1.1 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/go-kit/kit v0.13.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
