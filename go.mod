@@ -25,7 +25,7 @@ require (
 	github.com/prometheus/client_golang v1.23.0
 	github.com/proullon/ramsql v0.1.3
 	github.com/realio-tech/multi-staking-module v0.0.0-00010101000000-000000000000
-	github.com/realiotech/realio-network v1.5.0
+	github.com/realiotech/realio-network v1.6.0
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.20.1
@@ -417,18 +417,15 @@ require (
 )
 
 replace (
-	github.com/cosmos/evm => github.com/realiotech/evm v0.5.2
+	github.com/cosmos/evm => github.com/realiotech/evm v0.5.2-0.20260313133343-22d11a81faf9
 	// // need this replace to pick up the store changes (Copy func) in our cosmos-sdk fork
 	// cosmossdk.io/store => github.com/evmos/cosmos-sdk/store v0.0.0-20240718141609-414cbd051fbe
 	// // use Evmos geth fork
 	github.com/ethereum/go-ethereum => github.com/cosmos/go-ethereum v1.16.2-cosmos-1
 	// use Realio sdk v0.46.11-realio-4
 	// github.com/cosmos/cosmos-sdk => github.com/realiotech/cosmos-sdk v0.46.11-realio-4
-	github.com/evmos/os/example_chain => github.com/evmos/os/example_chain v0.0.0-20241002122822-02a9121016ee
+	// github.com/evmos/os/example_chain => github.com/evmos/os/example_chain v0.0.0-20241002122822-02a9121016ee
 	github.com/forbole/juno/v6 => github.com/decentrio/juno/v6 v6.0.2-0.20250114070111-5ece210090ec
-
-	// github.com/realio-tech/multi-staking-module => ../multi-staking
-	// github.com/evmos/os => ../evmos-os
 
 	// use cosmos flavored protobufs
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1

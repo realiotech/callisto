@@ -33,9 +33,6 @@ linters:
 
 issues:
   exclude-rules:
-    - text: "Use of weak random number generator"
-      linters:
-        - gosec
     - text: "comment on exported var"
       linters:
         - golint

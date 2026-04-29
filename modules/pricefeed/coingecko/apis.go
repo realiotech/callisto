@@ -7,6 +7,7 @@ import (
 	"math"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/forbole/callisto/v4/types"
 )
@@ -42,16 +43,18 @@ func ConvertCoingeckoPrices(prices []MarketTicker) []types.TokenPrice {
 	return tokenPrices
 }
 
+var coingeckoClient = &http.Client{Timeout: 10 * time.Second}
+
 // queryCoinGecko queries the CoinGecko APIs for the given endpoint
 func queryCoinGecko(endpoint string, ptr interface{}) error {
-	resp, err := http.Get("https://api.coingecko.com/api/v3" + endpoint)
+	resp, err := coingeckoClient.Get("https://api.coingecko.com/api/v3" + endpoint)
 	if err != nil {
 		return err
 	}
 
 	defer resp.Body.Close()
 
-	bz, err := io.ReadAll(resp.Body)
+	bz, err := io.ReadAll(io.LimitReader(resp.Body, 10<<20))
 	if err != nil {
 		return fmt.Errorf("error while reading response body: %s", err)
 	}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 // GetAvatarURL returns the avatar URL from the given identity.
@@ -41,17 +42,19 @@ func GetAvatarURL(identity string) (string, error) {
 	return data.Pictures.Primary.URL, nil
 }
 
+var keybaseClient = &http.Client{Timeout: 10 * time.Second}
+
 // queryKeyBase queries the Keybase APIs for the given endpoint, and de-serializes
 // the response as a JSON object inside the given ptr
 func queryKeyBase(endpoint string, ptr interface{}) error {
-	resp, err := http.Get("https://keybase.io/_/api/1.0" + endpoint)
+	resp, err := keybaseClient.Get("https://keybase.io/_/api/1.0" + endpoint)
 	if err != nil {
 		return fmt.Errorf("error while querying keybase APIs: %s", err)
 	}
 
 	defer resp.Body.Close()
 
-	bz, err := io.ReadAll(resp.Body)
+	bz, err := io.ReadAll(io.LimitReader(resp.Body, 10<<20))
 	if err != nil {
 		return fmt.Errorf("error while reading response body: %s", err)
 	}
