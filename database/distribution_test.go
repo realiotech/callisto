@@ -191,5 +191,4 @@ func (suite *DbTestSuite) TestBigDipperDb_GetRewardEarned() {
 	suite.Require().Equal("cosmos1address1", delegatorReward.DelegatorAddress)
 	// Should return one of the rewards for this delegator
 	suite.Require().True(delegatorReward.Coin.Denom == "uatom" || delegatorReward.Coin.Denom == "stake")
-
 }

@@ -1829,8 +1829,8 @@ github.com/realiotech/evm v0.5.2-0.20260313133343-22d11a81faf9 h1:2TDOQSHlp5g9Zv
 github.com/realiotech/evm v0.5.2-0.20260313133343-22d11a81faf9/go.mod h1:AiKOtGMt539qICNH2Kdy+iw9yK3rlcU6MWet3+g8sWs=
 github.com/realiotech/multi-staking v1.2.0 h1:KFxivYApcMFdsmLmuEu+EhwGommdAd/4jU+Q/tnIl4g=
 github.com/realiotech/multi-staking v1.2.0/go.mod h1:1Xqnya1oRaig2dHy/PmJjWRczqI/fIGsEt/pPF5XviQ=
-github.com/realiotech/realio-network v1.5.1-0.20260314121535-5b2b684457d8 h1:ov6k3VdJBnXN8zPGPAum0+XWNIwKfmaXdT6rAUp2c/k=
-github.com/realiotech/realio-network v1.5.1-0.20260314121535-5b2b684457d8/go.mod h1:l9ZcxNj7ryzYWmZFeCFgg3NMlnjz0WCm1l/l9HjUlT4=
+github.com/realiotech/realio-network v1.6.0 h1:fFV+qXzFMqa3EMr/DqXsKFfxqdYB0M/79kX4/GcxkbQ=
+github.com/realiotech/realio-network v1.6.0/go.mod h1:l0svBdICMHOJcGGcQg8CN/TjoJScKb6oz1E/7ou+0uc=
 github.com/regen-network/protobuf v1.3.3-alpha.regen.1 h1:OHEc+q5iIAXpqiqFKeLpu5NwTIkVXUs48vFMwzqpqY4=
 github.com/regen-network/protobuf v1.3.3-alpha.regen.1/go.mod h1:2DjTFR1HhMQhiWC5sZ4OhQ3+NtdbZ6oBDKQwq5Ou+FI=
 github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0/go.mod h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo=
