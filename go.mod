@@ -417,7 +417,7 @@ require (
 )
 
 replace (
-	github.com/cosmos/evm => github.com/realiotech/evm v0.5.2-0.20260313133343-22d11a81faf9
+	github.com/cosmos/evm => github.com/realiotech/evm v0.5.4-0.20260505144910-975c9200dde6
 	// // need this replace to pick up the store changes (Copy func) in our cosmos-sdk fork
 	// cosmossdk.io/store => github.com/evmos/cosmos-sdk/store v0.0.0-20240718141609-414cbd051fbe
 	// // use Evmos geth fork
