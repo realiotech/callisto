@@ -25,7 +25,7 @@ require (
 	github.com/prometheus/client_golang v1.23.0
 	github.com/proullon/ramsql v0.1.3
 	github.com/realio-tech/multi-staking-module v0.0.0-00010101000000-000000000000
-	github.com/realiotech/realio-network v1.6.0
+	github.com/realiotech/realio-network v1.6.1-0.20260505145214-784124676813
 	github.com/rs/zerolog v1.34.0
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.20.1
