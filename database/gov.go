@@ -265,6 +265,21 @@ WHERE proposal_deposit.height <= excluded.height`
 
 // --------------------------------------------------------------------------------------------------------------------
 
+// DeleteVotesByProposalAndVoter removes every option of a voter's existing vote on a proposal.
+// On-chain, a vote fully replaces whatever the voter previously cast for that proposal (there is
+// never more than one Vote object per (proposal, voter)) - so a re-vote that drops an option
+// entirely (eg. switching a straight Yes to a straight No) must clear it here too, or the stale
+// option's row keeps sitting in proposal_vote next to the new one, showing a voter as having
+// simultaneously voted mutually exclusive options that never coexisted on-chain.
+func (db *Db) DeleteVotesByProposalAndVoter(proposalID uint64, voter string) error {
+	stmt := `DELETE FROM proposal_vote WHERE proposal_id = $1 AND voter_address = $2`
+	_, err := db.SQL.Exec(stmt, proposalID, voter)
+	if err != nil {
+		return fmt.Errorf("error while deleting votes for proposal %d: %s", proposalID, err)
+	}
+	return nil
+}
+
 // SaveVote allows to save for the given height and the message vote
 func (db *Db) SaveVote(vote types.Vote) error {
 	query := `
