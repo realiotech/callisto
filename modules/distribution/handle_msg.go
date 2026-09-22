@@ -30,6 +30,7 @@ func (m *Module) HandleMsg(_ int, msg juno.Message, tx *juno.Transaction) error 
 	if msg.GetType() == "/cosmos.distribution.v1beta1.MsgFundCommunityPool" {
 		return m.updateCommunityPool(int64(tx.Height))
 	}
+
 	return nil
 }
 
