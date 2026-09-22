@@ -963,6 +963,8 @@ github.com/decentrio/juno/v6 v6.0.2-0.20250114070111-5ece210090ec h1:0LgX44I/xh9
 github.com/decentrio/juno/v6 v6.0.2-0.20250114070111-5ece210090ec/go.mod h1:O3o+73CiNjsIuPNWBOH3Wv59vvI5zeGfYIZBjsNj4/I=
 github.com/decentrio/juno/v6 v6.0.2-0.20260921043510-890e591f9f1f h1:1T1F0kHCWnPgJnDNR6ViiiB/o2oz4GykcM6URnld/oQ=
 github.com/decentrio/juno/v6 v6.0.2-0.20260921043510-890e591f9f1f/go.mod h1:O3o+73CiNjsIuPNWBOH3Wv59vvI5zeGfYIZBjsNj4/I=
+github.com/decentrio/juno/v6 v6.0.2-0.20260922053302-2904a96a96ea h1:cN9B7TRZOTBv9OqR30lQoJni4ADEM3bqv8SzKJ2DTHk=
+github.com/decentrio/juno/v6 v6.0.2-0.20260922053302-2904a96a96ea/go.mod h1:O3o+73CiNjsIuPNWBOH3Wv59vvI5zeGfYIZBjsNj4/I=
 github.com/deckarep/golang-set/v2 v2.6.0 h1:XfcQbWM1LlMB8BsJ8N9vW5ehnnPVIw0je80NsVHagjM=
 github.com/deckarep/golang-set/v2 v2.6.0/go.mod h1:VAky9rY/yGXJOLEDv3OMci+7wtDpOF4IN+y82NBOac4=
 github.com/decred/dcrd/crypto/blake256 v1.0.0/go.mod h1:sQl2p6Y26YV+ZOcSTP6thNdn47hh8kt6rqSlvmrXFAc=
