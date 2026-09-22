@@ -53,6 +53,20 @@ func (m *Module) updateProposalsStatus(height int64, txEvents, endBlockEvents []
 	}
 	ids = append(ids, idsInDepositTxs...)
 
+	// the proposal was dropped for not meeting the minimum deposit before the deposit period ended
+	inactiveIDs, err := findProposalIDsInEvents(endBlockEvents, govtypes.EventTypeInactiveProposal, govtypes.AttributeKeyProposalID)
+	if err != nil {
+		return err
+	}
+	ids = append(ids, inactiveIDs...)
+
+	// the proposal was cancelled by its proposer via MsgCancelProposal
+	cancelledIDs, err := findProposalIDsInEvents(txEvents, govtypes.EventTypeCancelProposal, govtypes.AttributeKeyProposalID)
+	if err != nil {
+		return err
+	}
+	ids = append(ids, cancelledIDs...)
+
 	// update status for proposals IDs stored in ids array
 	for _, id := range ids {
 		err := m.UpdateProposalStatus(height, id)

@@ -9,6 +9,7 @@ import (
 	"github.com/rs/zerolog/log"
 
 	authttypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/cosmos/cosmos-sdk/x/auth/vesting/exported"
 	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 
 	moduleutils "github.com/forbole/callisto/v4/modules/utils"
@@ -70,16 +71,26 @@ func (m *Module) handleMsgCreateVestingAccount(msg *vestingtypes.MsgCreateVestin
 		return fmt.Errorf("error while storing vesting account: %s", err)
 	}
 
-	bva, err := vestingtypes.NewBaseVestingAccount(
+	baseVestingAccount, err := vestingtypes.NewBaseVestingAccount(
 		authttypes.NewBaseAccountWithAddress(accAddress), msg.Amount, msg.EndTime,
 	)
 	if err != nil {
 		return fmt.Errorf("error while new base vesting account: %s", err)
 	}
 
-	err = m.db.StoreBaseVestingAccountFromMsg(bva, txTimestamp)
+	// Mirror x/auth/vesting's own CreateVestingAccount handler: a live MsgCreateVestingAccount
+	// never actually creates a bare BaseVestingAccount on-chain, only a ContinuousVestingAccount
+	// (start time = the time the message executed) or a DelayedVestingAccount (msg.Delayed).
+	var vestingAccount exported.VestingAccount
+	if msg.Delayed {
+		vestingAccount = vestingtypes.NewDelayedVestingAccountRaw(baseVestingAccount)
+	} else {
+		vestingAccount = vestingtypes.NewContinuousVestingAccountRaw(baseVestingAccount, txTimestamp.Unix())
+	}
+
+	err = m.db.SaveVestingAccounts([]exported.VestingAccount{vestingAccount})
 	if err != nil {
-		return fmt.Errorf("error while storing base vesting account from msg %s", err)
+		return fmt.Errorf("error while storing vesting account from msg %s", err)
 	}
 	return nil
 }

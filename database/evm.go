@@ -22,7 +22,8 @@ func (db *Db) SaveEvmTx(height int64, txHash string, eHash string) error {
 
 func (db *Db) saveEvmTxInsidePartition(hash string, eHash string, partitionID int64) error {
 	query := `INSERT INTO etransaction (ehash, transaction_hash, partition_id)
-		VALUES ($1, $2, $3)`
+		VALUES ($1, $2, $3)
+		ON CONFLICT ON CONSTRAINT unique_ehash_per_tx DO NOTHING`
 
 	_, err := db.SQL.Exec(query, eHash, hash, partitionID)
 	if err != nil {
