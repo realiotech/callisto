@@ -19,8 +19,14 @@ func (m *Module) HandleBlock(
 	block *tmctypes.ResultBlock, res *tmctypes.ResultBlockResults, _ []*juno.Transaction, _ *tmctypes.ResultValidators,
 ) error {
 
-	// Remove expired fee grant allowances
-	err := m.removeExpiredFeeGrantAllowances(block.Block.Height, res.FinalizeBlockEvents)
+	// Remove allowances that reached their expiration time (silently pruned on-chain, no event emitted)
+	err := m.db.DeleteExpiredFeeGrantAllowances(block.Block.Time)
+	if err != nil {
+		fmt.Printf("Error when deleting expired fee grant allowances, error: %s", err)
+	}
+
+	// Remove fee grant allowances that were explicitly revoked or fully used up (both emit an event)
+	err = m.removeExpiredFeeGrantAllowances(block.Block.Height, res.FinalizeBlockEvents)
 	if err != nil {
 		fmt.Printf("Error when removing expired fee grant allowance, error: %s", err)
 	}
