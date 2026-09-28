@@ -95,6 +95,13 @@ WHERE ms_unlocks.height <= excluded.height`
 	return nil
 }
 
+// SaveUnbondingToken replaces the entire token_unbonding table with the given multiStakingUnlocks'
+// totals per denom - the caller is expected to pass the complete current on-chain unlock set (as
+// UpdateMultiStakingUnlocks does), not a partial/incremental one. This always deletes first: a
+// denom with no unlocks left (total dropped to zero) has no entry in the computed total and so
+// would never be touched by an upsert-only write, silently leaving its old, now-wrong amount in
+// place forever - which is exactly what happened to a denom whose unbonding total should have
+// gone back to 0. For a delta-style, single-event update use SaveUnbondingToken2 instead.
 func (db *Db) SaveUnbondingToken(height int64, multiStakingUnlocks []*multistakingtypes.MultiStakingUnlock) error {
 	total := make(map[string]cosmossdk_io_math.Int)
 
@@ -110,6 +117,11 @@ func (db *Db) SaveUnbondingToken(height int64, multiStakingUnlocks []*multistaki
 				total[denom] = value.Add(amount)
 			}
 		}
+	}
+
+	_, err := db.SQL.Exec("DELETE FROM token_unbonding")
+	if err != nil {
+		return fmt.Errorf("error while deleting token_unbonding: %s", err)
 	}
 
 	if len(total) == 0 {
@@ -136,7 +148,7 @@ ON CONFLICT (denom) DO UPDATE
 		height = excluded.height
 WHERE token_unbonding.height <= excluded.height`
 
-	_, err := db.SQL.Exec(query, param...)
+	_, err = db.SQL.Exec(query, param...)
 	if err != nil {
 		return fmt.Errorf("error while saving token_unbonding: %s", err)
 	}
@@ -177,6 +189,9 @@ WHERE token_unbonding.height <= excluded.height`
 	return nil
 }
 
+// SaveBondedToken replaces the entire token_bonded table with the given multiStakingLocks' totals
+// per denom - see SaveUnbondingToken's comment for why this always deletes first instead of
+// upserting only the denoms currently present in the total.
 func (db *Db) SaveBondedToken(height int64, multiStakingLocks []*multistakingtypes.MultiStakingLock) error {
 	total := make(map[string]cosmossdk_io_math.Int)
 
@@ -189,6 +204,11 @@ func (db *Db) SaveBondedToken(height int64, multiStakingLocks []*multistakingtyp
 		} else {
 			total[denom] = value.Add(amount)
 		}
+	}
+
+	_, err := db.SQL.Exec("DELETE FROM token_bonded")
+	if err != nil {
+		return fmt.Errorf("error while deleting token_bonded: %s", err)
 	}
 
 	if len(total) == 0 {
@@ -215,7 +235,7 @@ ON CONFLICT (denom) DO UPDATE
 		height = excluded.height
 WHERE token_bonded.height <= excluded.height`
 
-	_, err := db.SQL.Exec(query, param...)
+	_, err = db.SQL.Exec(query, param...)
 	if err != nil {
 		return fmt.Errorf("error while saving token_bonded: %s", err)
 	}
