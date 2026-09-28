@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 
@@ -19,9 +20,9 @@ func (db *Db) SaveFeeGrantAllowance(allowance types.FeeGrant) error {
 	}
 
 	stmt := `
-INSERT INTO fee_grant_allowance(grantee_address, granter_address, allowance, height) 
-VALUES ($1, $2, $3, $4) 
-ON CONFLICT ON CONSTRAINT unique_fee_grant_allowance DO UPDATE 
+INSERT INTO fee_grant_allowance(grantee_address, granter_address, allowance, height)
+VALUES ($1, $2, $3, $4)
+ON CONFLICT ON CONSTRAINT unique_fee_grant_allowance DO UPDATE
     SET allowance = excluded.allowance,
         height = excluded.height
 WHERE fee_grant_allowance.height <= excluded.height`
@@ -46,6 +47,31 @@ func (db *Db) DeleteFeeGrantAllowance(allowance types.GrantRemoval) error {
 
 	if err != nil {
 		return fmt.Errorf("error while deleting grant allowance: %s", err)
+	}
+	return nil
+}
+
+// DeleteExpiredFeeGrantAllowances removes fee grant allowances whose expiration has passed as of
+// blockTime. cosmos-sdk's own feegrant EndBlocker (RemoveExpiredAllowances) prunes expired
+// allowances from the chain every block without emitting any event, so this can't rely on
+// event-driven deletion the way an explicit revoke or a used-up allowance does.
+//
+// The allowance column already stores the full ProtoMarshalJSON of the allowance (BasicAllowance
+// and PeriodicAllowance carry "expiration"/"basic.expiration" directly; AllowedMsgAllowance
+// wraps one of those one level deeper under "allowance"), so the expiration is read straight out
+// of that JSON instead of needing its own column.
+func (db *Db) DeleteExpiredFeeGrantAllowances(blockTime time.Time) error {
+	stmt := `
+DELETE FROM fee_grant_allowance
+WHERE COALESCE(
+    allowance->>'expiration',
+    allowance->'basic'->>'expiration',
+    allowance->'allowance'->>'expiration',
+    allowance->'allowance'->'basic'->>'expiration'
+)::timestamptz <= $1`
+	_, err := db.SQL.Exec(stmt, blockTime)
+	if err != nil {
+		return fmt.Errorf("error while deleting expired fee grant allowances: %s", err)
 	}
 	return nil
 }

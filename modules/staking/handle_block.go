@@ -11,6 +11,7 @@ import (
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmctypes "github.com/cometbft/cometbft/rpc/core/types"
 	tmtypes "github.com/cometbft/cometbft/types"
+	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/rs/zerolog/log"
 )
@@ -46,7 +47,17 @@ func (m *Module) updateValsByEvent(height int64, events []abci.Event) error {
 	for _, event := range events {
 		switch event.Type {
 		case stakingtypes.EventTypeCreateValidator:
-			m.RefreshAllValidatorInfos(height)
+			if err := m.RefreshAllValidatorInfos(height); err != nil {
+				return err
+			}
+
+		// A validator was just auto-jailed for downtime or double-signing (emitted in the
+		// BeginBlocker, not tied to any message), so refresh statuses/voting power right away
+		// instead of waiting for the periodic sync.
+		case slashingtypes.EventTypeSlash:
+			if err := m.UpdateValidatorStatuses(); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

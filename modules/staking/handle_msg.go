@@ -21,7 +21,8 @@ var msgFilter = map[string]bool{
 	"/cosmos.staking.v1beta1.MsgDelegate":        true,
 	"/cosmos.staking.v1beta1.MsgUndelegate":      true,
 	"/cosmos.staking.v1beta1.MsgBeginRedelegate": true,
-	"/multistaking.v1.MsgCreateEVMValidator":        true,
+	"/multistaking.v1.MsgCreateEVMValidator":     true,
+	"/cosmos.slashing.v1beta1.MsgUnjail":         true,
 }
 
 // HandleMsgExec implements modules.AuthzMessageModule
@@ -66,6 +67,11 @@ func (m *Module) HandleMsg(_ int, msg juno.Message, tx *juno.Transaction) error 
 		return m.UpdateValidatorStatuses()
 
 	case "/cosmos.staking.v1beta1.MsgUndelegate":
+		return m.UpdateValidatorStatuses()
+
+	// MsgUnjail immediately un-jails a validator and restores its voting power, so it needs the
+	// same refresh as a delegation change rather than waiting for the next periodic status sync.
+	case "/cosmos.slashing.v1beta1.MsgUnjail":
 		return m.UpdateValidatorStatuses()
 
 	}

@@ -12,10 +12,14 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// RemoveDuplicateValues removes the duplicated values from the given slice
+// RemoveDuplicateValues removes the duplicated values from the given slice. It always returns a
+// non-nil slice (empty when the input has no entries) because the result is written straight into
+// the NOT NULL message.involved_accounts_addresses column - a nil []string binds as SQL NULL via
+// the pq driver, while an empty []string{} correctly binds as '{}'. Messages whose events carry no
+// bech32 addresses (e.g. MsgEthereumTx, which uses hex addresses) used to hit this and fail to save.
 func RemoveDuplicateValues(slice []string) []string {
 	keys := make(map[string]bool)
-	var list []string
+	list := []string{}
 
 	for _, entry := range slice {
 		if _, value := keys[entry]; !value {

@@ -9,8 +9,28 @@ import (
 	"github.com/forbole/callisto/v4/modules/utils"
 )
 
+// RunAdditionalOperations implements modules.AdditionalOperationsModule. It runs once at
+// startup and backfills state that's otherwise only ever written by a specific message/event
+// (MsgCreateValidator, MsgEditValidator, a staking param-change proposal, genesis) - so a
+// validator/param that already existed before the indexer started syncing (or before a genesis
+// parse succeeded) would otherwise never get this data.
 func (m *Module) RunAdditionalOperations() error {
-	return m.UpdateValidatorsData()
+	if err := m.UpdateValidatorsData(); err != nil {
+		return err
+	}
+
+	block, err := m.db.GetLastBlockHeightAndTimestamp()
+	if err != nil {
+		return fmt.Errorf("error while getting latest block height from db: %s", err)
+	}
+
+	// validator_description/validator_commission for every current validator
+	if err := m.RefreshAllValidatorInfos(block.Height); err != nil {
+		return err
+	}
+
+	// staking_params
+	return m.UpdateParams(block.Height)
 }
 
 // RegisterPeriodicOperations implements modules.PeriodicOperationsModule

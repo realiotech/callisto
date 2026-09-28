@@ -11,12 +11,13 @@ import (
 )
 
 var (
-	_ modules.Module                   = &Module{}
-	_ modules.GenesisModule            = &Module{}
-	_ modules.PeriodicOperationsModule = &Module{}
-	_ modules.MessageModule            = &Module{}
-	_ modules.AuthzMessageModule       = &Module{}
-	_ modules.BlockModule              = &Module{}
+	_ modules.Module                     = &Module{}
+	_ modules.GenesisModule              = &Module{}
+	_ modules.PeriodicOperationsModule   = &Module{}
+	_ modules.AdditionalOperationsModule = &Module{}
+	_ modules.MessageModule              = &Module{}
+	_ modules.AuthzMessageModule         = &Module{}
+	_ modules.BlockModule                = &Module{}
 )
 
 // Module represents the x/distr module
