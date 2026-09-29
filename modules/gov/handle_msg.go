@@ -86,8 +86,32 @@ func (m *Module) handleSubmitProposalEvent(tx *juno.Transaction, proposer string
 		return fmt.Errorf("error while getting proposal id: %s", err)
 	}
 
+	if err := m.fetchAndSaveProposal(int64(tx.Height), proposalID); err != nil {
+		return err
+	}
+
+	// Submit proposal must have a deposit event with depositor equal to the proposer
+	return m.handleDepositEvent(tx, proposer, initialDeposit, events)
+}
+
+// fetchAndSaveProposal queries the given proposal from the chain and stores it, unless it's
+// already stored. votes/deposits/tallies all reference proposal(id) via foreign key, and a
+// MsgSubmitProposal is not the only way a proposal ID first becomes relevant to us: a proposal
+// submitted before the indexer's tracked window began (eg. it started syncing mid-chain, or
+// missed a block) never gets a row from handleSubmitProposalEvent, but a later MsgDeposit/MsgVote
+// against that same still-open proposal will still arrive - so this is called defensively before
+// storing any of those, to backfill the proposal on first reference instead of failing the FK.
+func (m *Module) fetchAndSaveProposal(height int64, proposalID uint64) error {
+	has, err := m.db.HasProposal(proposalID)
+	if err != nil {
+		return fmt.Errorf("error while checking proposal existence: %s", err)
+	}
+	if has {
+		return nil
+	}
+
 	// Get the proposal
-	proposal, err := m.source.Proposal(int64(tx.Height), proposalID)
+	proposal, err := m.source.Proposal(height, proposalID)
 	if err != nil {
 		if strings.Contains(err.Error(), codes.NotFound.String()) {
 			// query the proposal details using the latest height stored in db
@@ -147,7 +171,7 @@ func (m *Module) handleSubmitProposalEvent(tx *juno.Transaction, proposer string
 		*proposal.DepositEndTime,
 		proposal.VotingStartTime,
 		proposal.VotingEndTime,
-		proposer,
+		proposal.Proposer,
 	)
 
 	err = m.db.SaveProposals([]types.Proposal{proposalObj})
@@ -155,8 +179,7 @@ func (m *Module) handleSubmitProposalEvent(tx *juno.Transaction, proposer string
 		return fmt.Errorf("error while saving proposal: %s", err)
 	}
 
-	// Submit proposal must have a deposit event with depositor equal to the proposer
-	return m.handleDepositEvent(tx, proposer, initialDeposit, events)
+	return nil
 }
 
 // handleDepositEvent allows to properly handle a handleDepositEvent. amount is what this
@@ -169,6 +192,13 @@ func (m *Module) handleDepositEvent(tx *juno.Transaction, depositor string, amou
 	proposalID, err := ProposalIDFromEvents(events)
 	if err != nil {
 		return fmt.Errorf("error while getting proposal id: %s", err)
+	}
+
+	// The proposal might predate the indexer's tracked window (eg. it started syncing mid-chain),
+	// in which case this deposit is the first time we ever see this proposal ID - back it fill in
+	// first so the insert below doesn't fail its foreign key.
+	if err := m.fetchAndSaveProposal(int64(tx.Height), proposalID); err != nil {
+		return err
 	}
 
 	txTimestamp, err := time.Parse(time.RFC3339, tx.Timestamp)
@@ -187,6 +217,12 @@ func (m *Module) handleVoteEvent(tx *juno.Transaction, voter string, events sdk.
 	proposalID, err := ProposalIDFromEvents(events)
 	if err != nil {
 		return fmt.Errorf("error while getting proposal id: %s", err)
+	}
+
+	// See the same call in handleDepositEvent: the proposal might predate the indexer's tracked
+	// window, in which case this vote is the first time we ever see this proposal ID.
+	if err := m.fetchAndSaveProposal(int64(tx.Height), proposalID); err != nil {
+		return err
 	}
 
 	txTimestamp, err := time.Parse(time.RFC3339, tx.Timestamp)

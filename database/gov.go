@@ -137,6 +137,16 @@ ON CONFLICT (id) DO UPDATE
 	return nil
 }
 
+// HasProposal tells whether a proposal with the given id is already stored inside the database
+func (db *Db) HasProposal(id uint64) (bool, error) {
+	var exists bool
+	err := db.SQL.QueryRow(`SELECT EXISTS(SELECT 1 FROM proposal WHERE id = $1)`, id).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("error while checking proposal %d existence: %s", id, err)
+	}
+	return exists, nil
+}
+
 // GetProposal returns the proposal with the given id, or nil if not found
 func (db *Db) GetProposal(id uint64) (types.Proposal, error) {
 	var rows []*dbtypes.ProposalRow
