@@ -1835,6 +1835,8 @@ github.com/realiotech/multi-staking v1.2.0 h1:KFxivYApcMFdsmLmuEu+EhwGommdAd/4jU
 github.com/realiotech/multi-staking v1.2.0/go.mod h1:1Xqnya1oRaig2dHy/PmJjWRczqI/fIGsEt/pPF5XviQ=
 github.com/realiotech/realio-network v1.7.1 h1:NJz371AOQFd0GnWkv2d0FTHDY/UNSlfQ6zbZm9m/BQQ=
 github.com/realiotech/realio-network v1.7.1/go.mod h1:yR7wgN0Wm18YYqEd/w4DFbAAGPQtyiRdZD9wJH9PvM4=
+github.com/realiotech/realio-network v1.8.0-rc1 h1:ZAzwOqTb8nqNYQzdcMSo7Mq0t2vT3jkMMJvMv+Hn2ro=
+github.com/realiotech/realio-network v1.8.0-rc1/go.mod h1:yR7wgN0Wm18YYqEd/w4DFbAAGPQtyiRdZD9wJH9PvM4=
 github.com/regen-network/protobuf v1.3.3-alpha.regen.1 h1:OHEc+q5iIAXpqiqFKeLpu5NwTIkVXUs48vFMwzqpqY4=
 github.com/regen-network/protobuf v1.3.3-alpha.regen.1/go.mod h1:2DjTFR1HhMQhiWC5sZ4OhQ3+NtdbZ6oBDKQwq5Ou+FI=
 github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0/go.mod h1:qqbHyh8v60DhA7CoWK5oRCqLrMHRGoxYCSS9EjAz6Eo=
