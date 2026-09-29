@@ -17,7 +17,6 @@ var (
 	_ modules.AdditionalOperationsModule = &Module{}
 	_ modules.MessageModule              = &Module{}
 	_ modules.AuthzMessageModule         = &Module{}
-	_ modules.BlockModule                = &Module{}
 )
 
 // Module represents the x/distr module
