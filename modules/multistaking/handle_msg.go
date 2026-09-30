@@ -165,6 +165,11 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 		if err != nil {
 			return err
 		}
+	} else {
+		err = m.db.DropMultiStakingLock(stakerAddr, valAddr)
+		if err != nil {
+			return err
+		}
 	}
 
 	msunlock, err := m.source.GetMultiStakingUnlock(height, stakerAddr, valAddr)
@@ -179,6 +184,11 @@ func (m *Module) UpdateLockAndUnlockInfo(height int64, stakerAddr string, valAdd
 
 	if msunlock != nil {
 		err = m.db.SaveMultiStakingUnlock(height, msunlock)
+		if err != nil {
+			return err
+		}
+	} else {
+		err = m.db.DropMultiStakingUnlock(stakerAddr, valAddr)
 		if err != nil {
 			return err
 		}
