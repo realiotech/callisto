@@ -62,11 +62,18 @@ func (m *Module) convertValidator(height int64, validator stakingtypes.Validator
 		return nil, fmt.Errorf("error while getting validator consensus pub key: %s", err)
 	}
 
+	// GetOperator returns the bech32 string, so it has to be decoded first:
+	// casting it to AccAddress would encode the string's bytes.
+	valAddr, err := sdk.ValAddressFromBech32(validator.GetOperator())
+	if err != nil {
+		return nil, fmt.Errorf("error while parsing validator operator address: %s", err)
+	}
+
 	return types.NewValidator(
 		consAddr.String(),
 		validator.OperatorAddress,
 		consPubKey.String(),
-		sdk.AccAddress(validator.GetOperator()).String(),
+		sdk.AccAddress(valAddr).String(),
 		&validator.Commission.MaxChangeRate,
 		&validator.Commission.MaxRate,
 		height,
