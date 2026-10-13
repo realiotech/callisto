@@ -20,6 +20,12 @@ func (m *Module) RegisterPeriodicOperations(scheduler *gocron.Scheduler) error {
 		return fmt.Errorf("error while setting up bank periodic operation: %s", err)
 	}
 
+	if _, err := scheduler.Every(1).Hour().Do(func() {
+		utils.WatchMethod(m.RunAdditionalOperations)
+	}); err != nil {
+		return fmt.Errorf("error while setting up bank periodic operation: %s", err)
+	}
+
 	return nil
 }
 

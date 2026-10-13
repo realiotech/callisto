@@ -59,7 +59,16 @@ WHERE token_holder.height <= excluded.height`
 	return nil
 }
 
+// SaveAccountBalances replaces the entire balance table with the given set of balances.
+// It's meant to be used only when balances represents the complete current holder set
+// (eg. rebuilt from all denom owners at a given height), since any address/denom pair
+// that is not present in balances will be removed.
 func (db *Db) SaveAccountBalances(balances []types.AccountBalance, height int64) error {
+	_, err := db.SQL.Exec(`DELETE FROM balance`)
+	if err != nil {
+		return fmt.Errorf("error while deleting balance: %s", err)
+	}
+
 	if len(balances) == 0 {
 		return nil
 	}
@@ -75,12 +84,54 @@ func (db *Db) SaveAccountBalances(balances []types.AccountBalance, height int64)
 
 	query = query[:len(query)-1] // Remove trailing ","
 	query += `
-ON CONFLICT (address, denom) DO UPDATE 
+ON CONFLICT (address, denom) DO UPDATE
 	SET amount = excluded.amount,
     	height = excluded.height
 WHERE balance.height <= excluded.height`
 
-	_, err := db.SQL.Exec(query, param...)
+	_, err = db.SQL.Exec(query, param...)
+	if err != nil {
+		return fmt.Errorf("error while saving AccountBalances: %s", err)
+	}
+
+	return nil
+}
+
+// UpdateAccountBalances refreshes the balances of the given addresses, replacing whatever
+// is currently stored for them with balances. Any address/denom pair that used to be
+// stored for one of addresses but is not present in balances (eg. because it dropped to
+// zero and the chain no longer reports it) is removed, instead of being left stale.
+func (db *Db) UpdateAccountBalances(addresses []string, balances []types.AccountBalance, height int64) error {
+	if len(addresses) == 0 {
+		return nil
+	}
+
+	_, err := db.SQL.Exec(`DELETE FROM balance WHERE address = ANY($1)`, pq.Array(addresses))
+	if err != nil {
+		return fmt.Errorf("error while deleting stale AccountBalances: %s", err)
+	}
+
+	if len(balances) == 0 {
+		return nil
+	}
+
+	query := `INSERT INTO balance (address, amount, denom, height) VALUES`
+
+	var param []interface{}
+	for i, balance := range balances {
+		vi := i * 4
+		query += fmt.Sprintf("($%d,$%d,$%d,$%d),", vi+1, vi+2, vi+3, vi+4)
+		param = append(param, balance.Address, balance.Amount, balance.Denom, height)
+	}
+
+	query = query[:len(query)-1] // Remove trailing ","
+	query += `
+ON CONFLICT (address, denom) DO UPDATE
+	SET amount = excluded.amount,
+    	height = excluded.height
+WHERE balance.height <= excluded.height`
+
+	_, err = db.SQL.Exec(query, param...)
 	if err != nil {
 		return fmt.Errorf("error while saving AccountBalances: %s", err)
 	}

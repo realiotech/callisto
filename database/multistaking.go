@@ -95,6 +95,13 @@ WHERE ms_unlocks.height <= excluded.height`
 	return nil
 }
 
+// SaveUnbondingToken replaces the entire token_unbonding table with the given multiStakingUnlocks'
+// totals per denom - the caller is expected to pass the complete current on-chain unlock set (as
+// UpdateMultiStakingUnlocks does), not a partial/incremental one. This always deletes first: a
+// denom with no unlocks left (total dropped to zero) has no entry in the computed total and so
+// would never be touched by an upsert-only write, silently leaving its old, now-wrong amount in
+// place forever - which is exactly what happened to a denom whose unbonding total should have
+// gone back to 0. For a delta-style, single-event update use SaveUnbondingToken2 instead.
 func (db *Db) SaveUnbondingToken(height int64, multiStakingUnlocks []*multistakingtypes.MultiStakingUnlock) error {
 	total := make(map[string]cosmossdk_io_math.Int)
 
@@ -110,6 +117,11 @@ func (db *Db) SaveUnbondingToken(height int64, multiStakingUnlocks []*multistaki
 				total[denom] = value.Add(amount)
 			}
 		}
+	}
+
+	_, err := db.SQL.Exec("DELETE FROM token_unbonding")
+	if err != nil {
+		return fmt.Errorf("error while deleting token_unbonding: %s", err)
 	}
 
 	if len(total) == 0 {
@@ -136,7 +148,7 @@ ON CONFLICT (denom) DO UPDATE
 		height = excluded.height
 WHERE token_unbonding.height <= excluded.height`
 
-	_, err := db.SQL.Exec(query, param...)
+	_, err = db.SQL.Exec(query, param...)
 	if err != nil {
 		return fmt.Errorf("error while saving token_unbonding: %s", err)
 	}
@@ -177,6 +189,9 @@ WHERE token_unbonding.height <= excluded.height`
 	return nil
 }
 
+// SaveBondedToken replaces the entire token_bonded table with the given multiStakingLocks' totals
+// per denom - see SaveUnbondingToken's comment for why this always deletes first instead of
+// upserting only the denoms currently present in the total.
 func (db *Db) SaveBondedToken(height int64, multiStakingLocks []*multistakingtypes.MultiStakingLock) error {
 	total := make(map[string]cosmossdk_io_math.Int)
 
@@ -189,6 +204,11 @@ func (db *Db) SaveBondedToken(height int64, multiStakingLocks []*multistakingtyp
 		} else {
 			total[denom] = value.Add(amount)
 		}
+	}
+
+	_, err := db.SQL.Exec("DELETE FROM token_bonded")
+	if err != nil {
+		return fmt.Errorf("error while deleting token_bonded: %s", err)
 	}
 
 	if len(total) == 0 {
@@ -215,7 +235,7 @@ ON CONFLICT (denom) DO UPDATE
 		height = excluded.height
 WHERE token_bonded.height <= excluded.height`
 
-	_, err := db.SQL.Exec(query, param...)
+	_, err = db.SQL.Exec(query, param...)
 	if err != nil {
 		return fmt.Errorf("error while saving token_bonded: %s", err)
 	}
@@ -332,31 +352,40 @@ WHERE ms_locks.height <= excluded.height`
 	return nil
 }
 
+// SaveMultiStakingUnlock replaces every ms_unlocks row for this unlock's (staker_addr,
+// val_addr) pair with exactly the entries it currently holds. A plain upsert would leave
+// behind entries that already matured and were removed on-chain (maturity happens in the
+// EndBlocker, with no message for the indexer to react to), and UpdateUnlockToken re-reads
+// and re-subtracts every row still present in ms_unlocks on every subsequent call for the
+// same pair - so a stale entry gets subtracted from token_unbonding again on each later
+// call, eventually driving the aggregate negative.
 func (db *Db) SaveMultiStakingUnlock(height int64, unlock *multistakingtypes.MultiStakingUnlock) error {
+	stakerAddr := unlock.UnlockID.MultiStakerAddr
+	valAddr := unlock.UnlockID.ValAddr
+
+	_, err := db.SQL.Exec(`DELETE FROM ms_unlocks WHERE staker_addr = $1 AND val_addr = $2`, stakerAddr, valAddr)
+	if err != nil {
+		return fmt.Errorf("error while deleting stale msUnlock: %s", err)
+	}
+
+	entries := unlock.Entries
+	if len(entries) == 0 {
+		return nil
+	}
+
 	query := `INSERT INTO ms_unlocks (staker_addr, val_addr, creation_height, denom, amount, bond_weight, height) VALUES`
 
 	var param []interface{}
-	count := 0
-	entries := unlock.Entries
-	for _, entry := range entries {
-		vi := count * 7
+	for i, entry := range entries {
+		vi := i * 7
 		query += fmt.Sprintf("($%d,$%d,$%d,$%d,$%d,$%d,$%d),", vi+1, vi+2, vi+3, vi+4, vi+5, vi+6, vi+7)
-		mStakerAddr := unlock.UnlockID.MultiStakerAddr
-		valAddr := unlock.UnlockID.ValAddr
-		param = append(param, mStakerAddr, valAddr, entry.CreationHeight,
+		param = append(param, stakerAddr, valAddr, entry.CreationHeight,
 			entry.UnlockingCoin.Denom, entry.UnlockingCoin.Amount.String(), entry.UnlockingCoin.BondWeight.String(), height)
-		count++
 	}
 
 	query = query[:len(query)-1] // Remove trailing ","
-	query += `
-ON CONFLICT (staker_addr, val_addr, creation_height) DO UPDATE 
-	SET amount = excluded.amount,
-		bond_weight = excluded.bond_weight,
-		height = excluded.height
-WHERE ms_unlocks.height <= excluded.height`
 
-	_, err := db.SQL.Exec(query, param...)
+	_, err = db.SQL.Exec(query, param...)
 	if err != nil {
 		return fmt.Errorf("error while saving msUnlock: %s", err)
 	}
@@ -369,6 +398,16 @@ func (db *Db) DropMultiStakingUnlock(stakerAddr, valAddr string) error {
 	_, err := db.SQL.Exec(query, stakerAddr, valAddr)
 	if err != nil {
 		return fmt.Errorf("error while saving msLock: %s", err)
+	}
+
+	return nil
+}
+
+func (db *Db) DropMultiStakingLock(stakerAddr, valAddr string) error {
+	query := "DELETE from ms_locks where staker_addr = $1 AND val_addr = $2"
+	_, err := db.SQL.Exec(query, stakerAddr, valAddr)
+	if err != nil {
+		return fmt.Errorf("error while dropping msLock: %s", err)
 	}
 
 	return nil

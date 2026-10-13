@@ -14,6 +14,7 @@ var (
 	_ modules.AdditionalOperationsModule = &Module{}
 	_ modules.MessageModule              = &Module{}
 	_ modules.AuthzMessageModule         = &Module{}
+	_ modules.PeriodicOperationsModule   = &Module{}
 )
 
 // Module represents the x/staking module

@@ -11,11 +11,13 @@ import (
 )
 
 var (
-	_ modules.Module             = &Module{}
-	_ modules.GenesisModule      = &Module{}
-	_ modules.BlockModule        = &Module{}
-	_ modules.MessageModule      = &Module{}
-	_ modules.AuthzMessageModule = &Module{}
+	_ modules.Module                     = &Module{}
+	_ modules.GenesisModule              = &Module{}
+	_ modules.BlockModule                = &Module{}
+	_ modules.MessageModule              = &Module{}
+	_ modules.AuthzMessageModule         = &Module{}
+	_ modules.PeriodicOperationsModule   = &Module{}
+	_ modules.AdditionalOperationsModule = &Module{}
 )
 
 // Module represent x/gov module

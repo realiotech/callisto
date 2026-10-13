@@ -6,10 +6,12 @@ import (
 	bridgetypes "github.com/realiotech/realio-network/x/bridge/types"
 )
 
-func (db *Db) SaveBridgeIn(hash string, msg *bridgetypes.MsgBridgeIn) error {
+// SaveBridgeIn stores a single MsgBridgeIn, keyed by key (see bridgeMsgKey in
+// modules/bridge/handle_msg.go for why this isn't always just the plain tx hash).
+func (db *Db) SaveBridgeIn(key string, msg *bridgetypes.MsgBridgeIn) error {
 	query := `INSERT INTO bridge_in (hash, amount, denom, receiver) VALUES ($1, $2, $3, $4) ON CONFLICT (hash) DO NOTHING`
 
-	_, err := db.SQL.Exec(query, hash, msg.Coin.Amount.String(), msg.Coin.Denom, msg.Receiver)
+	_, err := db.SQL.Exec(query, key, msg.Coin.Amount.String(), msg.Coin.Denom, msg.Receiver)
 	if err != nil {
 		return fmt.Errorf("error while storing bridge msg: %s", err)
 	}
@@ -17,10 +19,11 @@ func (db *Db) SaveBridgeIn(hash string, msg *bridgetypes.MsgBridgeIn) error {
 	return nil
 }
 
-func (db *Db) SaveBridgeOut(hash string, msg *bridgetypes.MsgBridgeOut) error {
+// SaveBridgeOut stores a single MsgBridgeOut. See SaveBridgeIn.
+func (db *Db) SaveBridgeOut(key string, msg *bridgetypes.MsgBridgeOut) error {
 	query := `INSERT INTO bridge_out (hash, amount, denom, sender) VALUES ($1, $2, $3, $4) ON CONFLICT (hash) DO NOTHING`
 
-	_, err := db.SQL.Exec(query, hash, msg.Coin.Amount.String(), msg.Coin.Denom, msg.Signer)
+	_, err := db.SQL.Exec(query, key, msg.Coin.Amount.String(), msg.Coin.Denom, msg.Signer)
 	if err != nil {
 		return fmt.Errorf("error while storing bridge msg: %s", err)
 	}
