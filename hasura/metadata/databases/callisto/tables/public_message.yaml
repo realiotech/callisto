@@ -13,7 +13,7 @@ object_relationships:
         transaction_hash: hash
 select_permissions:
 - permission:
-    allow_aggregations: false
+    allow_aggregations: true
     columns:
     - transaction_hash
     - index
@@ -22,5 +22,5 @@ select_permissions:
     - involved_accounts_addresses
     - height
     filter: {}
-    limit: 100
+    limit: 1000
   role: anonymous
