@@ -107,5 +107,5 @@ select_permissions:
     - consensus_address
     - consensus_pubkey
     filter: {}
-    limit: 100
+    limit: 1000
   role: anonymous
