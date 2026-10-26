@@ -18,5 +18,5 @@ select_permissions:
     - height
     - avatar_url
     filter: {}
-    limit: 100
+    limit: 1000
   role: anonymous

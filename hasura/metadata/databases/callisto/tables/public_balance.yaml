@@ -10,5 +10,5 @@ select_permissions:
     - denom
     - height
     filter: {}
-    limit: 200
+    limit: 1000
   role: anonymous

@@ -18,5 +18,5 @@ select_permissions:
     - max_change_rate
     - max_rate
     filter: {}
-    limit: 100
+    limit: 1000
   role: anonymous
